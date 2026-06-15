@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <utility>
 
-using std::ptrdiff_t;
-
 namespace Sort {
+
+using std::ptrdiff_t;
 
 template <typename T> 
 void swap(T &a, T &b) {

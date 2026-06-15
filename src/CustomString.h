@@ -34,6 +34,9 @@ public:
   bool operator<(const char *s) const;
   bool operator>(const char *s) const;
 
+  bool equalsIgnoreCase(const String &other) const;
+  bool equalsIgnoreCase(const char *s) const;
+
   String operator+(const String &other) const;
   String &operator+=(const String &other);
 

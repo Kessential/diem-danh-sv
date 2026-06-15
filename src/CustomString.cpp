@@ -37,6 +37,30 @@ static int my_strcmp(const char *s1, const char *s2) {
   return static_cast<unsigned char>(*s1) - static_cast<unsigned char>(*s2);
 }
 
+static int my_stricasecmp(const char *s1, const char *s2) {
+  if (s1 == s2)
+    return 0;
+  if (s1 == nullptr)
+    return -1;
+  if (s2 == nullptr)
+    return 1;
+
+  while (*s1 != '\0' && *s2 != '\0') {
+    char c1 = *s1;
+    char c2 = *s2;
+    if (c1 >= 'A' && c1 <= 'Z') c1 += 32;
+    if (c2 >= 'A' && c2 <= 'Z') c2 += 32;
+    if (c1 != c2) break;
+    s1++;
+    s2++;
+  }
+  char c1 = *s1;
+  char c2 = *s2;
+  if (c1 >= 'A' && c1 <= 'Z') c1 += 32;
+  if (c2 >= 'A' && c2 <= 'Z') c2 += 32;
+  return static_cast<unsigned char>(c1) - static_cast<unsigned char>(c2);
+}
+
 // ========================================================
 // Cai dat class String
 // ========================================================
@@ -152,6 +176,14 @@ bool String::operator<(const char *s) const {
 }
 bool String::operator>(const char *s) const {
   return my_strcmp(c_str(), s ? s : "") > 0;
+}
+
+bool String::equalsIgnoreCase(const String &other) const {
+  return my_stricasecmp(c_str(), other.c_str()) == 0;
+}
+
+bool String::equalsIgnoreCase(const char *s) const {
+  return my_stricasecmp(c_str(), s ? s : "") == 0;
 }
 
 String String::operator+(const String &other) const {
