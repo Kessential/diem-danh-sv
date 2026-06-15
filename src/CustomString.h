@@ -1,42 +1,43 @@
 #pragma once
 #include <iostream>
 
-class CustomString {
+class String {
 private:
   char *data;
-  int len;
+  size_t len;
 
 public:
-  CustomString();
-  CustomString(const char *s);
-  CustomString(const CustomString &other);
-  ~CustomString();
+  String();
+  String(const char *s);
+  String(const String &other);
+  ~String();
 
-  CustomString &operator=(const CustomString &other);
-  CustomString &operator=(const char *s);
+  String &operator=(const String &other);
+  String &operator=(const char *s);
 
-  int length() const;
+  String(String &&other) noexcept;
+  String &operator=(String &&other) noexcept;
+
+  size_t length() const;
   const char *c_str() const;
   bool empty() const;
 
-  char operator[](int i) const;
-  char &operator[](int i);
+  char operator[](size_t i) const;
+  char &operator[](size_t i);
 
-  bool operator==(const CustomString &other) const;
-  bool operator!=(const CustomString &other) const;
-  bool operator<(const CustomString &other) const;
-  bool operator>(const CustomString &other) const;
+  bool operator==(const String &other) const;
+  bool operator!=(const String &other) const;
+  bool operator<(const String &other) const;
+  bool operator>(const String &other) const;
   bool operator==(const char *s) const;
+  bool operator!=(const char *s) const;
   bool operator<(const char *s) const;
   bool operator>(const char *s) const;
 
-  friend bool operator==(const CustomString& lhs, const CustomString& rhs);
-  friend bool operator<(const CustomString& lhs, const CustomString& rhs);
+  String operator+(const String &other) const;
+  String &operator+=(const String &other);
 
-  CustomString operator+(const CustomString& other) const;
-  CustomString& operator+=(const CustomString& other);
-
-  friend std::ostream& operator<<(std::ostream& os, const CustomString& str);
-  friend std::istream& operator>>(std::istream& is, CustomString& str);
-  friend std::istream& getline(std::istream& is, CustomString& str);
+  friend std::ostream &operator<<(std::ostream &os, const String &str);
+  friend std::istream &operator>>(std::istream &is, String &str);
+  friend std::istream &getline(std::istream &is, String &str);
 };
