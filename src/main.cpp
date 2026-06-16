@@ -9,8 +9,15 @@
 #include "FileIO.h"
 #include "Menu.h"
 #include <cstdio>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 int main() {
+    #ifdef _WIN32
+    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
+    #endif
     // ── 1. Khai báo 3 mảng động toàn phiên làm việc ──────────
     Vector<LopHoc>        dsLopHoc;
     Vector<SinhVien>      dsSinhVien;
@@ -44,7 +51,7 @@ int main() {
             case 1: menuQuanLyLopHoc(dsLopHoc); break;
             case 2: menuQuanLySinhVien(dsSinhVien, dsLopHoc); break;
             case 3: menuDiemDanh(dsLopHoc, dsSinhVien, dsDiemDanh); break;
-            case 4: menuTimKiem(dsSinhVien, dsDiemDanh); break;
+            case 4: menuTimKiem(dsLopHoc, dsSinhVien, dsDiemDanh); break;
             case 5: menuBaoCao(dsLopHoc, dsSinhVien, dsDiemDanh); break;
             case 0:
                 printf("\n  Tam biet! Hen gap lai.\n\n");

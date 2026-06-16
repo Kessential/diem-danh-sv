@@ -24,4 +24,4 @@ void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh> &dsDD,
 bool daDiemDanhBuoi(const Vector<PhieuDiemDanh> &dsDD, const String &ngay,
                     const String &maLop);
 
-} // namespace Search
+}

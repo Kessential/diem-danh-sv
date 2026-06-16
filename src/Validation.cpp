@@ -131,4 +131,74 @@ char nhapTrangThai(const char *tenSV) {
   }
 }
 
+bool nhapXacNhan(const char *label) {
+  char buf[512];
+  while (true) {
+    std::cout << label << " (y/n): ";
+    std::cin.getline(buf, sizeof(buf));
+    if (std::cin.fail()) {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      continue;
+    }
+    if (strlen(buf) > 0) {
+      char c = my_toupper(buf[0]);
+      if (c == 'Y') return true;
+      if (c == 'N') return false;
+    }
+    std::cout << "  [!] Vui long nhap y hoac n.\n";
+  }
+}
+
+bool nhapChuoiCoBaoLuu(const char *label, String &dest, int maxLen) {
+  char buf[512];
+  while (true) {
+    std::cout << label << " (hien tai: " << dest.c_str() << ", enter de giu nguyen): ";
+    std::cin.getline(buf, sizeof(buf));
+    if (std::cin.fail()) {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      continue;
+    }
+    int len = strlen(buf);
+    if (len == 0) return false; // Nguoi dung chi an Enter, bao luu ket qua
+    
+    if (len > maxLen) buf[maxLen] = '\0';
+    dest = String(buf);
+    return true; // Co du lieu moi
+  }
+}
+
+bool nhapSoNguyenCoBaoLuu(const char *label, int &dest, int minVal, int maxVal) {
+  char buf[512];
+  while (true) {
+    std::cout << label << " (hien tai: " << dest << " [" << minVal << "-" << maxVal << "], enter de giu nguyen): ";
+    std::cin.getline(buf, sizeof(buf));
+    if (std::cin.fail()) {
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      continue;
+    }
+    int len = strlen(buf);
+    if (len == 0) return false;
+    
+    bool isNumber = true;
+    for (int i = 0; i < len; ++i) {
+      if (!my_isdigit(buf[i]) && !(i == 0 && buf[0] == '-')) {
+        isNumber = false;
+        break;
+      }
+    }
+    
+    if (isNumber) {
+      int val = std::atoi(buf);
+      if (val >= minVal && val <= maxVal) {
+        dest = val;
+        return true;
+      }
+    }
+    std::cout << "  [!] Gia tri khong hop le. Vui long nhap lai.\n";
+  }
+}
+
 }
