@@ -7,6 +7,7 @@ private:
   size_t cap;
   size_t len;
 
+  // Mo rong kich thuoc bo nho cua vector
   void grow(size_t newCap) {
     if (newCap <= cap)
       return;
@@ -21,6 +22,7 @@ private:
   }
 
 public:
+  // --- Constructor & Destructor ---
   Vector() : data(nullptr), cap(0), len(0) {}
 
   ~Vector() { delete[] data; }
@@ -33,7 +35,8 @@ public:
     }
   }
 
-  // Copy Assignment dung Copy-and-swap (ko dung std::swap)
+  // --- Toan tu gan (Copy & Move) ---
+  // Copy assignment dung copy-and-swap (ko dung std::swap)
   Vector &operator=(const Vector &other) {
     if (this != &other) {
       Vector temp(other);
@@ -74,6 +77,7 @@ public:
     return *this;
   }
 
+  // Them phan tu vao cuoi vector (copy)
   void push_back(const T &value) {
     if (len == cap)
       grow(cap == 0 ? 1 : cap * 2);
@@ -81,6 +85,7 @@ public:
     ++len;
   }
 
+  // Them phan tu vao cuoi vector (move)
   void push_back(T &&value) {
     if (len == cap)
       grow(cap == 0 ? 1 : cap * 2);
@@ -89,6 +94,7 @@ public:
     ++len;
   }
 
+  // Xoa phan tu tai vi tri index
   void remove(size_t index) {
     if (index >= len)
       return;
@@ -99,6 +105,7 @@ public:
     --len;
   }
 
+  // Xoa phan tu o cuoi vector
   void pop_back() {
     if (len > 0) {
       --len;
@@ -106,6 +113,7 @@ public:
     }
   }
 
+  // Xoa tat ca phan tu, dat len ve 0
   void clear() {
     for (size_t i = 0; i < len; ++i) {
       data[i] = T();
@@ -113,20 +121,21 @@ public:
     len = 0;
   }
 
+  // Truy cap phan tu tai vi tri index
   T &operator[](size_t index) { return data[index]; }
   const T &operator[](size_t index) const { return data[index]; }
 
+  // Truy cap phan tu cuoi cung
   T &back() { return data[len - 1]; }
   const T &back() const { return data[len - 1]; }
 
+  // Cac ham lay thong tin kich thuoc
   size_t size() const { return len; }
   size_t capacity() const { return cap; }
   bool empty() const { return len == 0; }
 
-  // ==========================================
   // Bo sung iterator chuan C++
   // De dung duoc range-based for: for(auto& x : vector)
-  // ==========================================
   using iterator = T *;
   using const_iterator = const T *;
 

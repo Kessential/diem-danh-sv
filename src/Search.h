@@ -4,24 +4,32 @@
 
 namespace Search {
 
-int timLopHocTheoMa(const Vector<LopHoc> &arr, const String &maLop);
-int timSinhVienTheoMSSV(const Vector<SinhVien> &arr, const String &mssv);
+// --- Tim kiem vi tri (tra ve index, -1 neu khong tim thay) ---
+int timLopHocTheoMa(const Vector<LopHoc>& arr, const String& maLop);
+int timSinhVienTheoMSSV(const Vector<SinhVien>& arr, const String& mssv);
 
-void timSinhVienTheoLop(const Vector<SinhVien> &dsSV, const String &maLop,
-                        Vector<SinhVien> &result);
+// --- Tim kiem danh sach (luu ket qua vao vector result) ---
+void timSinhVienTheoLop(const Vector<SinhVien>& dsSV,
+                        const String& maLop,
+                        Vector<SinhVien>& result);
 
-void timDiemDanhTheoNgayVaLop(const Vector<PhieuDiemDanh> &dsDD,
-                              const String &ngay, const String &maLop,
-                              Vector<PhieuDiemDanh> &result);
+void timDiemDanhTheoNgayVaLop(const Vector<PhieuDiemDanh>& dsDD,
+                              const String& ngay, 
+                              const String& maLop,
+                              Vector<PhieuDiemDanh>& result);
 
-void timDiemDanhTheoMSSV(const Vector<PhieuDiemDanh> &dsDD, const String &mssv,
-                         Vector<PhieuDiemDanh> &result);
+void timDiemDanhTheoMSSV(const Vector<PhieuDiemDanh>& dsDD, 
+                        const String& mssv,
+                        Vector<PhieuDiemDanh>& result);
 
-void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh> &dsDD,
-                              const String &mssv, const String &maLop,
-                              Vector<PhieuDiemDanh> &result);
+void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh>& dsDD,
+                              const String& mssv, 
+                              const String& maLop,
+                              Vector<PhieuDiemDanh>& result);
 
-bool daDiemDanhBuoi(const Vector<PhieuDiemDanh> &dsDD, const String &ngay,
-                    const String &maLop);
+// --- Kiem tra ton tai ---
+bool daDiemDanhBuoi(const Vector<PhieuDiemDanh>& dsDD, 
+                    const String& ngay,
+                    const String& maLop);
 
-}
+}  // namespace Search
