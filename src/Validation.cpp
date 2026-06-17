@@ -1,30 +1,39 @@
 #include "Validation.h"
-#include "Models.h"
+
 #include <iostream>
 #include <limits>
 
+#include "Models.h"
+
 namespace Validation {
 
-// Helper functions
+// --- Ham ho tro (internal) ---
+
+// Kiem tra ky tu so
 static bool my_isdigit(char c) {
   return c >= '0' && c <= '9';
 }
 
+// Kiem tra ky tu chu cai
 static bool my_isalpha(char c) {
   return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
 }
 
+// Kiem tra ky tu chu hoac so
 static bool my_isalnum(char c) {
   return my_isdigit(c) || my_isalpha(c);
 }
 
+// Chuyen thanh chu in hoa
 static char my_toupper(char c) {
   if (c >= 'a' && c <= 'z') return c - 32;
   return c;
 }
 
+// --- Ham kiem tra (Validation) ---
+
 // Kiem tra chuoi ngay hop le (DD/MM/YYYY)
-bool isValidDate(const String &ngay) {
+bool isValidDate(const String& ngay) {
   if (ngay.length() != 10) return false;
   if (ngay[2] != '/' || ngay[5] != '/') return false;
 
@@ -52,7 +61,8 @@ bool isValidDate(const String &ngay) {
   return true;
 }
 
-bool isValidMSSV(const String &mssv) {
+// Kiem tra MSSV chi chua chu/so, toi da 20 ky tu
+bool isValidMSSV(const String& mssv) {
   if (mssv.empty() || mssv.length() > 20) return false;
   for (size_t i = 0; i < mssv.length(); ++i) {
     if (!my_isalnum(mssv[i])) return false;
@@ -60,18 +70,22 @@ bool isValidMSSV(const String &mssv) {
   return true;
 }
 
+// Kiem tra trang thai C, P, hoac K
 bool isValidTrangThai(char tt) {
   return tt == static_cast<char>(TrangThaiDD::CO_MAT) ||
          tt == static_cast<char>(TrangThaiDD::VANG_PHEP) ||
          tt == static_cast<char>(TrangThaiDD::VANG_KHONG_PHEP);
 }
 
-bool isValidMaLop(const String &maLop) {
+// Kiem tra ma lop khong rong, toi da 50 ky tu
+bool isValidMaLop(const String& maLop) {
   return !maLop.empty() && maLop.length() <= 50;
 }
 
-// Nhap chuoi an toan voi class String tu dinh nghia
-void nhapChuoi(const char *label, String &dest, int maxLen) {
+// --- Ham nhap lieu (Input) ---
+
+// Nhap chuoi an toan, khong cho phep bo trong
+void nhapChuoi(const char* label, String& dest, int maxLen) {
   String temp;
   while (true) {
     std::cout << "  " << label << ": ";
@@ -90,14 +104,14 @@ void nhapChuoi(const char *label, String &dest, int maxLen) {
   }
 }
 
-int nhapSoNguyen(const char *label, int minVal, int maxVal) {
+// Nhap so nguyen nam trong khoang minVal - maxVal
+int nhapSoNguyen(const char* label, int minVal, int maxVal) {
   int val;
   while (true) {
     std::cout << "  " << label << " (" << minVal << "-" << maxVal << "): ";
     if (std::cin >> val) {
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      if (val >= minVal && val <= maxVal)
-        return val;
+      if (val >= minVal && val <= maxVal) return val;
     } else {
       std::cin.clear();
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -106,21 +120,22 @@ int nhapSoNguyen(const char *label, int minVal, int maxVal) {
   }
 }
 
-// Tra ve truc tiep enum thay vi ky tu de an toan kieu (type-safe)
-TrangThaiDD nhapTrangThai(const char *tenSV) {
+// Nhap trang thai diem danh (C/P/K) va tra ve enum
+TrangThaiDD nhapTrangThai(const char* tenSV) {
   char tt;
   while (true) {
-    std::cout << "  [" << tenSV << "] Trang thai (C=Co mat / P=Vang phep / K=Vang khong phep): ";
+    std::cout << "  [" << tenSV
+              << "] Trang thai (C=Co mat / P=Vang phep / K=Vang khong phep): ";
     std::cin >> tt;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     tt = my_toupper(tt);
-    if (isValidTrangThai(tt))
-      return static_cast<TrangThaiDD>(tt);
+    if (isValidTrangThai(tt)) return static_cast<TrangThaiDD>(tt);
     std::cout << "  [!] Chi chap nhan C, P hoac K.\n";
   }
 }
 
-bool nhapXacNhan(const char *label) {
+// Nhap xac nhan y hoac n, tra ve true/false
+bool nhapXacNhan(const char* label) {
   String temp;
   while (true) {
     std::cout << label << " (y/n): ";
@@ -139,10 +154,12 @@ bool nhapXacNhan(const char *label) {
   }
 }
 
-bool nhapChuoiCoBaoLuu(const char *label, String &dest, int maxLen) {
+// Nhap chuoi, neu de trong (Enter) thi tra ve false (giu nguyen)
+bool nhapChuoiCoBaoLuu(const char* label, String& dest, int maxLen) {
   String temp;
   while (true) {
-    std::cout << "  " << label << " (hien tai: " << dest.c_str() << ", enter de giu nguyen): ";
+    std::cout << "  " << label << " (hien tai: " << dest
+              << ", enter de giu nguyen): ";
     getline(std::cin, temp);
     if (std::cin.fail()) {
       std::cin.clear();
@@ -155,10 +172,13 @@ bool nhapChuoiCoBaoLuu(const char *label, String &dest, int maxLen) {
   }
 }
 
-bool nhapSoNguyenCoBaoLuu(const char *label, int &dest, int minVal, int maxVal) {
+// Nhap so nguyen, neu de trong (Enter) thi tra ve false (giu nguyen)
+bool nhapSoNguyenCoBaoLuu(const char* label, int& dest, int minVal,
+                          int maxVal) {
   String temp;
   while (true) {
-    std::cout << "  " << label << " (hien tai: " << dest << " [" << minVal << "-" << maxVal << "], enter de giu nguyen): ";
+    std::cout << "  " << label << " (hien tai: " << dest << " [" << minVal
+              << "-" << maxVal << "], enter de giu nguyen): ";
     getline(std::cin, temp);
     if (std::cin.fail()) {
       std::cin.clear();
@@ -166,7 +186,7 @@ bool nhapSoNguyenCoBaoLuu(const char *label, int &dest, int minVal, int maxVal) 
       continue;
     }
     if (temp.empty()) return false;
-    
+
     bool isNumber = true;
     for (size_t i = 0; i < temp.length(); ++i) {
       if (!my_isdigit(temp[i]) && !(i == 0 && temp[0] == '-')) {
@@ -174,7 +194,7 @@ bool nhapSoNguyenCoBaoLuu(const char *label, int &dest, int minVal, int maxVal) 
         break;
       }
     }
-    
+
     if (isNumber) {
       int val = temp.toInt();
       if (val >= minVal && val <= maxVal) {
@@ -186,4 +206,4 @@ bool nhapSoNguyenCoBaoLuu(const char *label, int &dest, int minVal, int maxVal) 
   }
 }
 
-}
+}  // namespace Validation

@@ -2,6 +2,7 @@
 
 namespace Search {
 
+// Duyet mang, tra ve index neu maLop khop
 int timLopHocTheoMa(const Vector<LopHoc>& arr, const String& maLop) {
   for (size_t i = 0; i < arr.size(); ++i) {
     if (arr[i].maLop.equalsIgnoreCase(maLop)) return (int)i;
@@ -9,6 +10,7 @@ int timLopHocTheoMa(const Vector<LopHoc>& arr, const String& maLop) {
   return -1;
 }
 
+// Duyet mang, tra ve index neu mssv khop
 int timSinhVienTheoMSSV(const Vector<SinhVien>& arr, const String& mssv) {
   for (size_t i = 0; i < arr.size(); ++i) {
     if (arr[i].mssv.equalsIgnoreCase(mssv)) return (int)i;
@@ -16,6 +18,7 @@ int timSinhVienTheoMSSV(const Vector<SinhVien>& arr, const String& mssv) {
   return -1;
 }
 
+// Loc SV theo maLop, day vao result
 void timSinhVienTheoLop(const Vector<SinhVien>& dsSV, 
                         const String& maLop,
                         Vector<SinhVien>& result) {
@@ -25,6 +28,7 @@ void timSinhVienTheoLop(const Vector<SinhVien>& dsSV,
   }
 }
 
+// Loc phieu diem danh theo ngay va maLop, day vao result
 void timDiemDanhTheoNgayVaLop(const Vector<PhieuDiemDanh>& dsDD,
                               const String& ngay, 
                               const String& maLop,
@@ -36,6 +40,7 @@ void timDiemDanhTheoNgayVaLop(const Vector<PhieuDiemDanh>& dsDD,
   }
 }
 
+// Loc phieu diem danh theo mssv, day vao result
 void timDiemDanhTheoMSSV(const Vector<PhieuDiemDanh>& dsDD, 
                          const String& mssv,
                          Vector<PhieuDiemDanh>& result) {
@@ -45,6 +50,7 @@ void timDiemDanhTheoMSSV(const Vector<PhieuDiemDanh>& dsDD,
   }
 }
 
+// Loc phieu diem danh theo mssv va maLop, day vao result
 void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh>& dsDD,
                               const String& mssv,
                               const String& maLop,
@@ -57,6 +63,7 @@ void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh>& dsDD,
   }
 }
 
+// Kiem tra ton tai phieu diem danh theo ngay va maLop
 bool daDiemDanhBuoi(const Vector<PhieuDiemDanh>& dsDD, 
                     const String& ngay,
                     const String& maLop) {

@@ -3,13 +3,13 @@
 #include "Validation.h"
 #include <iostream>
 #include <iomanip>
-#include <limits>
 
 namespace DiemDanhManager {
 
 // Tinh ty le vang cho 1 sinh vien
 ThongKeSinhVien tinhTiLeVang(Vector<PhieuDiemDanh>& dsDD,
-                              SinhVien& sv, int tongSoBuoi) {
+                             SinhVien& sv, 
+                             int tongSoBuoi) {
   ThongKeSinhVien tk;
   tk.mssv = sv.mssv;
   tk.hoTen = sv.hoTen;
@@ -28,7 +28,7 @@ ThongKeSinhVien tinhTiLeVang(Vector<PhieuDiemDanh>& dsDD,
   }
 
   if (tongSoBuoi > 0) {
-    tk.tiLe = (float)tk.soVang / tongSoBuoi * 100.0f;
+    tk.tiLe = (float)tk.soVangKhongPhep / tongSoBuoi * 100.0f;
   } else {
     tk.tiLe = 0.0f;
   }
@@ -39,8 +39,9 @@ ThongKeSinhVien tinhTiLeVang(Vector<PhieuDiemDanh>& dsDD,
 
 // Ghi diem danh mot buoi cho toan lop
 void ghiDiemDanhMoiLop(Vector<SinhVien>& dsSV,
-                        Vector<PhieuDiemDanh>& dsDD,
-                        const String& maLop, const String& ngay) {
+                       Vector<PhieuDiemDanh>& dsDD,
+                       const String& maLop, 
+                       const String& ngay) {
   Vector<SinhVien> svLop;
   Search::timSinhVienTheoLop(dsSV, maLop, svLop);
 
@@ -51,11 +52,7 @@ void ghiDiemDanhMoiLop(Vector<SinhVien>& dsSV,
 
   if (Search::daDiemDanhBuoi(dsDD, ngay, maLop)) {
     std::cout << "  [!] Buoi " << ngay << " da duoc diem danh.\n";
-    std::cout << "  Ban co muon diem danh lai? (y/n): ";
-    char c;
-    std::cin >> c;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    if (c != 'y' && c != 'Y') return;
+    if (!Validation::nhapXacNhan("  Ban co muon diem danh lai?")) return;
   }
 
   std::cout << "\n  === GHI NHAN DIEM DANH — Lop " << maLop
@@ -77,9 +74,9 @@ void ghiDiemDanhMoiLop(Vector<SinhVien>& dsSV,
 
 // Quet toan lop, in SV co ty le vang > 20%
 void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
-                           Vector<PhieuDiemDanh>& dsDD,
-                           Vector<LopHoc>& dsLop,
-                           const String& maLop) {
+                          Vector<PhieuDiemDanh>& dsDD,
+                          Vector<LopHoc>& dsLop,
+                          const String& maLop) {
   int tongSoBuoi = 0;
   for (int i = 0; i < (int)dsLop.size(); ++i) {
     if (dsLop[i].maLop == maLop) {
@@ -92,7 +89,7 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
   std::cout << "  " << std::left << std::setw(12) << "MSSV"
             << std::setw(25) << "Ho Ten"
             << std::right << std::setw(8) << "SoVang"
-            << std::setw(8) << "TiLe%" << '\n';
+            << std::setw(8) << "TiLe%\n";
   std::cout << "  -----------------------------------------------------\n";
 
   bool found = false;
@@ -109,7 +106,7 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
       }
     }
   }
-
+// comment lai o day ti bo sung them phan cot canh bao?
   if (!found) {
     std::cout << "  Khong co sinh vien nao bi canh bao cam thi.\n";
   }
@@ -117,8 +114,10 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
 
 // Sua trang thai 1 phieu diem danh
 bool suaDiemDanh(Vector<PhieuDiemDanh>& dsDD,
-                  const String& mssv, const String& maLop,
-                  const String& ngay, TrangThaiDD trangThaiMoi) {
+                  const String& mssv, 
+                  const String& maLop,
+                  const String& ngay, 
+                  TrangThaiDD trangThaiMoi) {
   for (int i = 0; i < (int)dsDD.size(); ++i) {
     if (dsDD[i].mssv == mssv && dsDD[i].maLop == maLop && dsDD[i].ngay == ngay) {
       dsDD[i].trangThai = trangThaiMoi;
