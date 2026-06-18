@@ -1,7 +1,36 @@
 #include "Menu.h"
 #include "Validation.h"
+#include "Sort.h"
 #include <iostream>
 #include <iomanip>
+
+// --- Cac ham ho tro (Helpers) ---
+static void tachTen(const String& hoTen, String& hoDem, String& ten) {
+  int len = hoTen.length();
+  int lastSpace = -1;
+  for (int i = len - 1; i >= 0; --i) {
+    if (hoTen[i] == ' ') {
+      lastSpace = i;
+      break;
+    }
+  }
+  if (lastSpace == -1) {
+    hoDem = "";
+    ten = hoTen;
+  } else {
+    hoDem = hoTen.substring(0, lastSpace);
+    ten = hoTen.substring(lastSpace + 1, len - lastSpace - 1);
+  }
+}
+
+static long long parseDate(const String& dateStr) {
+  if (dateStr.length() < 10) return 0;
+  int dd = (dateStr[0] - '0') * 10 + (dateStr[1] - '0');
+  int mm = (dateStr[3] - '0') * 10 + (dateStr[4] - '0');
+  int yyyy = (dateStr[6] - '0') * 1000 + (dateStr[7] - '0') * 100 +
+             (dateStr[8] - '0') * 10 + (dateStr[9] - '0');
+  return (long long)yyyy * 10000 + mm * 100 + dd;
+}
 
 void printHeader(const char *title) {
   std::cout << "\n";
@@ -14,6 +43,7 @@ void printSeparator() {
   std::cout << "  ────────────────────────────────────────────────\n";
 }
 
+// --- Quan ly Lop hoc ---
 void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
   if (dsLop.size() == 0) {
     std::cout << "  Chua co lop hoc nao.\n";
@@ -43,7 +73,7 @@ void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
   printSeparator();
 }
 
-void themLopHoc(Vector<LopHoc> &dsLop) {
+void themLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
   LopHoc lh;
   std::cout << "\n  ─── THEM LOP HOC MOI ───\n";
   while (true) {
@@ -63,11 +93,11 @@ void themLopHoc(Vector<LopHoc> &dsLop) {
   Validation::nhapChuoi("  Phong hoc", lh.tkb.phong);
   lh.tongSoBuoi = Validation::nhapSoNguyen("  Tong so buoi", 1, 60);
   dsLop.push_back(lh);
-  FileIO::saveLopHoc(PATH_LOPHOC, dsLop);
+  FileIO::saveLopHoc(pathLop, dsLop);
   std::cout << "  [OK] Da them lop '" << lh.maLop << "'.\n";
 }
 
-void suaLopHoc(Vector<LopHoc> &dsLop) {
+void suaLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
   String maLop;
   std::cout << "\n  ─── SUA THONG TIN LOP HOC ───\n";
   Validation::nhapChuoi("  Ma lop can sua", maLop);
@@ -85,11 +115,11 @@ void suaLopHoc(Vector<LopHoc> &dsLop) {
   Validation::nhapSoNguyenCoBaoLuu("  So tiet", lh.tkb.soTiet, 1, 6);
   Validation::nhapChuoiCoBaoLuu("  Phong hoc", lh.tkb.phong);
   Validation::nhapSoNguyenCoBaoLuu("  Tong so buoi", lh.tongSoBuoi, 1, 60);
-  FileIO::saveLopHoc(PATH_LOPHOC, dsLop);
+  FileIO::saveLopHoc(pathLop, dsLop);
   std::cout << "  [OK] Da cap nhat lop '" << maLop << "'.\n";
 }
 
-void xoaLopHoc(Vector<LopHoc> &dsLop) {
+void xoaLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
   String maLop;
   std::cout << "\n  ─── XOA LOP HOC ───\n";
   Validation::nhapChuoi("  Ma lop can xoa", maLop);
@@ -99,11 +129,11 @@ void xoaLopHoc(Vector<LopHoc> &dsLop) {
     return;
   }
   dsLop.remove(idx);
-  FileIO::saveLopHoc(PATH_LOPHOC, dsLop);
+  FileIO::saveLopHoc(pathLop, dsLop);
   std::cout << "  [OK] Da xoa lop '" << maLop << "'.\n";
 }
 
-void menuQuanLyLopHoc(Vector<LopHoc> &dsLop) {
+void menuQuanLyLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
   int choice;
   do {
     printHeader("1. QUAN LY LOP HOC");
@@ -119,18 +149,19 @@ void menuQuanLyLopHoc(Vector<LopHoc> &dsLop) {
       hienThiDanhSachLop(dsLop);
       break;
     case 2:
-      themLopHoc(dsLop);
+      themLopHoc(dsLop, pathLop);
       break;
     case 3:
-      suaLopHoc(dsLop);
+      suaLopHoc(dsLop, pathLop);
       break;
     case 4:
-      xoaLopHoc(dsLop);
+      xoaLopHoc(dsLop, pathLop);
       break;
     }
   } while (choice != 0);
 }
 
+// --- Quan ly Sinh vien ---
 void hienThiSVTheoLop(const Vector<SinhVien> &dsSV, const String &maLop) {
   std::cout << "\n  Danh sach sinh vien lop " << maLop << ":\n";
   printSeparator();
@@ -153,7 +184,7 @@ void hienThiSVTheoLop(const Vector<SinhVien> &dsSV, const String &maLop) {
   }
 }
 
-void themSinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop) {
+void themSinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop, const char* pathSV) {
   SinhVien sv;
   std::cout << "\n  ─── THEM SINH VIEN ───\n";
   Validation::nhapChuoi("  MSSV", sv.mssv);
@@ -176,11 +207,11 @@ void themSinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop) {
     return;
   }
   dsSV.push_back(sv);
-  FileIO::saveSinhVien(PATH_SINHVIEN, dsSV);
+  FileIO::saveSinhVien(pathSV, dsSV);
   std::cout << "  [OK] Da them sinh vien '" << sv.mssv << "'.\n";
 }
 
-void suaSinhVien(Vector<SinhVien> &dsSV) {
+void suaSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
   String mssv;
   std::cout << "\n  ─── SUA THONG TIN SINH VIEN ───\n";
   Validation::nhapChuoi("  MSSV can sua", mssv);
@@ -191,11 +222,11 @@ void suaSinhVien(Vector<SinhVien> &dsSV) {
   }
   std::cout << "  (De trong de giu nguyen gia tri hien tai)\n";
   Validation::nhapChuoiCoBaoLuu("  Ho Ten moi", dsSV[idx].hoTen);
-  FileIO::saveSinhVien(PATH_SINHVIEN, dsSV);
+  FileIO::saveSinhVien(pathSV, dsSV);
   std::cout << "  [OK] Da cap nhat sinh vien '" << mssv << "'.\n";
 }
 
-void xoaSinhVien(Vector<SinhVien> &dsSV) {
+void xoaSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
   String mssv;
   std::cout << "\n  ─── XOA SINH VIEN ───\n";
   Validation::nhapChuoi("  MSSV can xoa", mssv);
@@ -205,11 +236,11 @@ void xoaSinhVien(Vector<SinhVien> &dsSV) {
     return;
   }
   dsSV.remove(idx);
-  FileIO::saveSinhVien(PATH_SINHVIEN, dsSV);
+  FileIO::saveSinhVien(pathSV, dsSV);
   std::cout << "  [OK] Da xoa sinh vien '" << mssv << "'.\n";
 }
 
-void menuQuanLySinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop) {
+void menuQuanLySinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop, const char* pathSV) {
   int choice;
   do {
     printHeader("2. QUAN LY SINH VIEN");
@@ -232,20 +263,23 @@ void menuQuanLySinhVien(Vector<SinhVien> &dsSV, Vector<LopHoc> &dsLop) {
       break;
     }
     case 2:
-      themSinhVien(dsSV, dsLop);
+      themSinhVien(dsSV, dsLop, pathSV);
       break;
     case 3:
-      suaSinhVien(dsSV);
+      suaSinhVien(dsSV, pathSV);
       break;
     case 4:
-      xoaSinhVien(dsSV);
+      xoaSinhVien(dsSV, pathSV);
       break;
     }
   } while (choice != 0);
 }
 
-void menuDiemDanh(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
-                  Vector<PhieuDiemDanh> &dsDD) {
+// --- Diem danh ---
+void menuDiemDanh(Vector<LopHoc> &dsLop, 
+                  Vector<SinhVien> &dsSV,
+                  Vector<PhieuDiemDanh> &dsDD,
+                  const char* pathDD) {
   int choice;
   do {
     printHeader("3. DIEM DANH");
@@ -270,7 +304,7 @@ void menuDiemDanh(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
         std::cout << "  [!] Ngay khong hop le hoac sai dinh dang. Vui long nhap lai.\n";
       }
       DiemDanhManager::ghiDiemDanhMoiLop(dsSV, dsDD, maLop, ngay);
-      FileIO::saveDiemDanh(PATH_DIEMDANH, dsDD);
+      FileIO::saveDiemDanh(pathDD, dsDD);
       break;
     }
     case 2: {
@@ -312,7 +346,7 @@ void menuDiemDanh(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
         Validation::nhapChuoi("  MSSV can sua", mssv);
         TrangThaiDD ttMoi = Validation::nhapTrangThai(mssv.c_str());
         if (DiemDanhManager::suaDiemDanh(dsDD, mssv, maLop, ngay, ttMoi)) {
-          FileIO::saveDiemDanh(PATH_DIEMDANH, dsDD);
+          FileIO::saveDiemDanh(pathDD, dsDD);
           std::cout << "  [OK] Da cap nhat diem danh.\n";
         } else {
           std::cout << "  [!] Khong tim thay phieu diem danh.\n";
@@ -334,7 +368,9 @@ void menuDiemDanh(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
   } while (choice != 0);
 }
 
-void menuTimKiem(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
+// --- Tim kiem ---
+void menuTimKiem(Vector<LopHoc> &dsLop, 
+                 Vector<SinhVien> &dsSV,
                  Vector<PhieuDiemDanh> &dsDD) {
   int choice;
   do {
@@ -414,8 +450,11 @@ void menuTimKiem(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
   } while (choice != 0);
 }
 
-void menuBaoCao(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
-                Vector<PhieuDiemDanh> &dsDD) {
+// --- Bao cao & Thong ke ---
+void menuBaoCao(Vector<LopHoc> &dsLop, 
+                Vector<SinhVien> &dsSV,
+                Vector<PhieuDiemDanh> &dsDD, 
+                const char* exportDir) {
   int choice;
   do {
     printHeader("5. BAO CAO & THONG KE");
@@ -447,19 +486,120 @@ void menuBaoCao(Vector<LopHoc> &dsLop, Vector<SinhVien> &dsSV,
       BaoCao::xemTiLeVangToanLop(dsSV, dsDD, dsLop, maLop);
       break;
     case 4:
-      BaoCao::xuatBaoCaoFile(dsSV, dsDD, dsLop, maLop);
+      BaoCao::xuatBaoCaoFile(dsSV, dsDD, dsLop, maLop, exportDir);
       break;
     }
   } while (choice != 0);
 }
 
+// --- Sap xep du lieu ---
+static void sapXepLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
+  int tieuChi = Validation::nhapSoNguyen("  1: Ma lop tang dan, 2: Ma lop giam dan. Chon", 1, 2);
+  if (tieuChi == 1) {
+    Sort::sort(dsLop, [](const LopHoc& a, const LopHoc& b) { return a.maLop < b.maLop; });
+  } else {
+    Sort::sort(dsLop, [](const LopHoc& a, const LopHoc& b) { return a.maLop > b.maLop; });
+  }
+  FileIO::saveLopHoc(pathLop, dsLop);
+  std::cout << "  [OK] Da sap xep va luu danh sach Lop hoc.\n";
+}
+
+static void sapXepSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
+  int tc = Validation::nhapSoNguyen("  1: Theo MSSV, 2: Theo Ma lop -> Ten -> Ho dem -> MSSV. Chon", 1, 2);
+  int huong = Validation::nhapSoNguyen("  1: Tang dan, 2: Giam dan. Chon", 1, 2);
+  if (tc == 1) {
+    if (huong == 1) {
+      Sort::sort(dsSV, [](const SinhVien& a, const SinhVien& b) { return a.mssv < b.mssv; });
+    } else {
+      Sort::sort(dsSV, [](const SinhVien& a, const SinhVien& b) { return a.mssv > b.mssv; });
+    }
+  } else {
+    auto cmp = [](const SinhVien& a, const SinhVien& b) {
+      if (a.maLop != b.maLop) return a.maLop < b.maLop;
+      String hoDemA, tenA, hoDemB, tenB;
+      tachTen(a.hoTen, hoDemA, tenA);
+      tachTen(b.hoTen, hoDemB, tenB);
+      if (tenA != tenB) return tenA < tenB;
+      if (hoDemA != hoDemB) return hoDemA < hoDemB;
+      return a.mssv < b.mssv;
+    };
+    auto cmpDesc = [](const SinhVien& a, const SinhVien& b) {
+      if (a.maLop != b.maLop) return a.maLop > b.maLop;
+      String hoDemA, tenA, hoDemB, tenB;
+      tachTen(a.hoTen, hoDemA, tenA);
+      tachTen(b.hoTen, hoDemB, tenB);
+      if (tenA != tenB) return tenA > tenB;
+      if (hoDemA != hoDemB) return hoDemA > hoDemB;
+      return a.mssv > b.mssv;
+    };
+    if (huong == 1) Sort::sort(dsSV, cmp);
+    else Sort::sort(dsSV, cmpDesc);
+  }
+  FileIO::saveSinhVien(pathSV, dsSV);
+  std::cout << "  [OK] Da sap xep va luu danh sach Sinh vien.\n";
+}
+
+static void sapXepDiemDanh(Vector<PhieuDiemDanh> &dsDD, const char* pathDD) {
+  std::cout << "  Sap xep danh sach diem danh theo thu tu Ma lop -> Ngay -> MSSV\n";
+  int huong = Validation::nhapSoNguyen("  1: Tang dan, 2: Giam dan. Chon", 1, 2);
+  auto cmp = [](const PhieuDiemDanh& a, const PhieuDiemDanh& b) {
+    if (a.maLop != b.maLop) return a.maLop < b.maLop;
+    long long dateA = parseDate(a.ngay);
+    long long dateB = parseDate(b.ngay);
+    if (dateA != dateB) return dateA < dateB;
+    return a.mssv < b.mssv;
+  };
+  auto cmpDesc = [](const PhieuDiemDanh& a, const PhieuDiemDanh& b) {
+    if (a.maLop != b.maLop) return a.maLop > b.maLop;
+    long long dateA = parseDate(a.ngay);
+    long long dateB = parseDate(b.ngay);
+    if (dateA != dateB) return dateA > dateB;
+    return a.mssv > b.mssv;
+  };
+  if (huong == 1) Sort::sort(dsDD, cmp);
+  else Sort::sort(dsDD, cmpDesc);
+  FileIO::saveDiemDanh(pathDD, dsDD);
+  std::cout << "  [OK] Da sap xep va luu danh sach Diem danh.\n";
+}
+
+void menuSapXep(Vector<LopHoc> &dsLop, 
+                Vector<SinhVien> &dsSV, 
+                Vector<PhieuDiemDanh> &dsDD, 
+                const char* pathLop, 
+                const char* pathSV, 
+                const char* pathDD) {
+  int choice;
+  do {
+    printHeader("5. SAP XEP DU LIEU");
+    std::cout << "    1. Sap xep danh sach Lop hoc\n";
+    std::cout << "    2. Sap xep danh sach Sinh vien\n";
+    std::cout << "    3. Sap xep danh sach Diem danh\n";
+    std::cout << "    0. Quay lai menu chinh\n";
+    printSeparator();
+    choice = Validation::nhapSoNguyen("  Chon", 0, 3);
+    switch (choice) {
+    case 1:
+      sapXepLopHoc(dsLop, pathLop);
+      break;
+    case 2:
+      sapXepSinhVien(dsSV, pathSV);
+      break;
+    case 3:
+      sapXepDiemDanh(dsDD, pathDD);
+      break;
+    }
+  } while (choice != 0);
+}
+
+// --- Menu Chinh ---
 void hienThiMenuChinh() {
   printHeader("HE THONG QUAN LY DIEM DANH LOP HOC");
   std::cout << "    1. Quan ly Lop hoc\n";
   std::cout << "    2. Quan ly Sinh vien\n";
   std::cout << "    3. Diem danh\n";
   std::cout << "    4. Tim kiem\n";
-  std::cout << "    5. Bao cao & Thong ke\n";
+  std::cout << "    5. Sap xep\n";
+  std::cout << "    6. Bao cao & Thong ke\n";
   std::cout << "    0. Thoat chuong trinh\n";
   printSeparator();
 }

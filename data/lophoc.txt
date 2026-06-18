@@ -1,4 +1,4 @@
+105234|CS giai tich ham|Huong|4|12|4|D7-307|15
+169030|Co so du lieu|GV CSDL|3|1|2|D5-102|15
 KTLT_01|Ky thuat lap trinh|Nguyen Van A|3|1|4|B4-201|15
 KTLT_02|Ky thuat lap trinh|Tran Thi B|5|5|4|A1-101|15
-169030|Co so du lieu|GV CSDL|3|1|2|D5-102|15
-105234|CS giai tich ham|Huong|4|12|4|D7-307|15

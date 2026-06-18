@@ -41,6 +41,7 @@ void xemTiLeVangToanLop(Vector<SinhVien>& dsSV,
 void xuatBaoCaoFile(Vector<SinhVien>& dsSV, 
                     Vector<PhieuDiemDanh>& dsDD,
                     Vector<LopHoc>& dsLop, 
-                    const String& maLop);
+                    const String& maLop,
+                    const char* exportDir);
 
 }  // namespace BaoCao

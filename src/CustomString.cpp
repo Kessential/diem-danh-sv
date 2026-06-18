@@ -145,6 +145,31 @@ bool String::empty() const {
   return len == 0;
 }
 
+// Tach chuoi con theo index va size
+String String::substring(size_t start, size_t count) const {
+  if (start >= len || data == nullptr || count == 0) {
+    return String();
+  }
+
+  size_t actualCount = count;
+  if (count > len - start) {
+    actualCount = len - start;
+  }
+
+  if (actualCount == 0) {
+    return String();
+  }
+
+  String result;
+  result.len = actualCount;
+  result.data = new char[actualCount + 1];
+
+  my_memcpy(result.data, data + start, actualCount);
+  result.data[actualCount] = '\0';
+
+  return result;
+}
+
 int String::toInt() const {
   if (data == nullptr || len == 0) return 0;
 

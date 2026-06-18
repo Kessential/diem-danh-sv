@@ -17,7 +17,7 @@ bool isValidTrangThai(char tt);
 bool isValidMaLop(const String& maLop);
 
 // Nhap chuoi an toan tu ban phim
-void nhapChuoi(const char* label, String& dest, int maxLen = 255);
+void nhapChuoi(const char* label, String& dest);
 
 // Nhap so nguyen trong khoang [minVal, maxVal]
 int nhapSoNguyen(const char* label, int minVal, int maxVal);
@@ -29,7 +29,7 @@ TrangThaiDD nhapTrangThai(const char* tenSV);
 bool nhapXacNhan(const char* label);
 
 // Nhap chuoi, nhan Enter de giu gia tri cu
-bool nhapChuoiCoBaoLuu(const char* label, String& dest, int maxLen = 255);
+bool nhapChuoiCoBaoLuu(const char* label, String& dest);
 
 // Nhap so nguyen, nhan Enter de giu gia tri cu
 bool nhapSoNguyenCoBaoLuu(const char* label, int& dest, int minVal, int maxVal);

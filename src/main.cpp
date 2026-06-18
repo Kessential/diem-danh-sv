@@ -13,11 +13,18 @@ int main() {
   SetConsoleCP(CP_UTF8);
   SetConsoleOutputCP(CP_UTF8);
 #endif
+  // Duong dan cac file data
+  const char* PATH_LOPHOC = "data/lophoc.txt";
+  const char* PATH_SINHVIEN = "data/sinhvien.txt";
+  const char* PATH_DIEMDANH = "data/diemdanh.txt";
+  const char* DIR_EXPORT = "export/";
 
+  // --- Khoi tao danh sach ---
   Vector<LopHoc>        dsLopHoc;
   Vector<SinhVien>      dsSinhVien;
   Vector<PhieuDiemDanh> dsDiemDanh;
 
+  // --- Nap du lieu tu file ---
   if (!FileIO::loadLopHoc(PATH_LOPHOC, dsLopHoc)) {
     std::cout << "[INFO] Khong doc duoc '" << PATH_LOPHOC
               << "', bat dau voi danh sach rong.\n";
@@ -38,16 +45,18 @@ int main() {
   std::cout << "       Sinh vien: " << (int)dsSinhVien.size() << "\n";
   std::cout << "       Diem danh: " << (int)dsDiemDanh.size() << " phieu\n\n";
 
+  // --- Vong lap Menu chinh ---
   int choice;
   do {
     hienThiMenuChinh();
-    choice = Validation::nhapSoNguyen("  Chon chuc nang", 0, 5);
+    choice = Validation::nhapSoNguyen("  Chon chuc nang", 0, 6);
     switch (choice) {
-    case 1: menuQuanLyLopHoc(dsLopHoc); break;
-    case 2: menuQuanLySinhVien(dsSinhVien, dsLopHoc); break;
-    case 3: menuDiemDanh(dsLopHoc, dsSinhVien, dsDiemDanh); break;
+    case 1: menuQuanLyLopHoc(dsLopHoc, PATH_LOPHOC); break;
+    case 2: menuQuanLySinhVien(dsSinhVien, dsLopHoc, PATH_SINHVIEN); break;
+    case 3: menuDiemDanh(dsLopHoc, dsSinhVien, dsDiemDanh, PATH_DIEMDANH); break;
     case 4: menuTimKiem(dsLopHoc, dsSinhVien, dsDiemDanh); break;
-    case 5: menuBaoCao(dsLopHoc, dsSinhVien, dsDiemDanh); break;
+    case 5: menuSapXep(dsLopHoc, dsSinhVien, dsDiemDanh, PATH_LOPHOC, PATH_SINHVIEN, PATH_DIEMDANH); break;
+    case 6: menuBaoCao(dsLopHoc, dsSinhVien, dsDiemDanh, DIR_EXPORT); break;
     case 0: std::cout << "\n  Tam biet! Hen gap lai.\n\n"; break;
     }
   } while (choice != 0);

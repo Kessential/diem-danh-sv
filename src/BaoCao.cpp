@@ -5,6 +5,7 @@
 
 namespace BaoCao {
 
+// --- Cac ham ho tro (Helpers) ---
 void xayDungThongKe(Vector<SinhVien>& dsSV, 
                     Vector<PhieuDiemDanh>& dsDD,
                     Vector<LopHoc>& dsLop, 
@@ -44,6 +45,7 @@ static Vector<String> layDanhSachNgayDiemDanh(Vector<PhieuDiemDanh>& dsDD,
   return ngayDD;
 }
 
+// --- Cac chuc nang thong ke ---
 void thongKeSiSoTheoBuoi(Vector<PhieuDiemDanh>& dsDD, const String& maLop) {
   Vector<String> ngayDD = layDanhSachNgayDiemDanh(dsDD, maLop);
 
@@ -141,11 +143,13 @@ void xemTiLeVangToanLop(Vector<SinhVien>& dsSV,
   }
 }
 
+// --- Xuat bao cao ra file ---
 void xuatBaoCaoFile(Vector<SinhVien>& dsSV, 
                     Vector<PhieuDiemDanh>& dsDD,
                     Vector<LopHoc>& dsLop, 
-                    const String& maLop) {
-  String tenFile = String("data/baocao_") + maLop + String(".txt");
+                    const String& maLop,
+                    const char* exportDir) {
+  String tenFile = String(exportDir) + String("baocao_") + maLop + String(".txt");
 
   std::ofstream out(tenFile.c_str());
   if (!out) {

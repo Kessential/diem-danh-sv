@@ -85,7 +85,7 @@ bool isValidMaLop(const String& maLop) {
 // --- Ham nhap lieu (Input) ---
 
 // Nhap chuoi an toan, khong cho phep bo trong
-void nhapChuoi(const char* label, String& dest, int maxLen) {
+void nhapChuoi(const char* label, String& dest) {
   String temp;
   while (true) {
     std::cout << "  " << label << ": ";
@@ -155,7 +155,7 @@ bool nhapXacNhan(const char* label) {
 }
 
 // Nhap chuoi, neu de trong (Enter) thi tra ve false (giu nguyen)
-bool nhapChuoiCoBaoLuu(const char* label, String& dest, int maxLen) {
+bool nhapChuoiCoBaoLuu(const char* label, String& dest) {
   String temp;
   while (true) {
     std::cout << "  " << label << " (hien tai: " << dest
@@ -173,7 +173,9 @@ bool nhapChuoiCoBaoLuu(const char* label, String& dest, int maxLen) {
 }
 
 // Nhap so nguyen, neu de trong (Enter) thi tra ve false (giu nguyen)
-bool nhapSoNguyenCoBaoLuu(const char* label, int& dest, int minVal,
+bool nhapSoNguyenCoBaoLuu(const char* label, 
+                          int& dest, 
+                          int minVal,
                           int maxVal) {
   String temp;
   while (true) {

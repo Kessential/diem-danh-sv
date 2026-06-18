@@ -1,12 +1,14 @@
 #pragma once
 #include "CustomString.h"
 
+// --- Enum trang thai ---
 enum class TrangThaiDD : char {
   CO_MAT = 'C',
   VANG_PHEP = 'P',
   VANG_KHONG_PHEP = 'K'
 };
 
+// --- Cac cau truc du lieu co ban ---
 struct ThoiKhoaBieu {
   int thu;
   int tietBatDau;
@@ -35,6 +37,7 @@ struct PhieuDiemDanh {
   TrangThaiDD trangThai;
 };
 
+// --- Cac cau truc du lieu phuc vu thong ke/bao cao ---
 struct ThongKeSinhVien {
   String mssv;
   String hoTen;

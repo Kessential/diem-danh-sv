@@ -25,6 +25,7 @@ class String {
   const char* c_str() const;
   bool empty() const;
   int toInt() const;
+  String substring(size_t start, size_t count) const;
 
   // Truy cap ky tu tai vi tri i
   char operator[](size_t i) const;
