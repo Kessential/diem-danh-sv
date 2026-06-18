@@ -9,6 +9,7 @@
 
 void printHeader(const char* title);
 void printSeparator();
+void printDynamicSeparator(int width);
 
 //  1. Quan ly lop hoc
 void hienThiDanhSachLop(const Vector<LopHoc>& dsLop);
@@ -19,7 +20,10 @@ void menuQuanLyLopHoc(Vector<LopHoc>& dsLop, const char* pathLop);
 
 //  2. Quan ly sinh vien
 void hienThiSVTheoLop(const Vector<SinhVien>& dsSV, const String& maLop);
-void themSinhVien(Vector<SinhVien>& dsSV, Vector<LopHoc>& dsLop, const char* pathSV);
+void themSinhVien(Vector<SinhVien>& dsSV, 
+                  Vector<LopHoc>& dsLop, 
+                  const char* pathSV);
+                  
 void suaSinhVien(Vector<SinhVien>& dsSV, const char* pathSV);
 void xoaSinhVien(Vector<SinhVien>& dsSV, const char* pathSV);
 void menuQuanLySinhVien(Vector<SinhVien>& dsSV, 

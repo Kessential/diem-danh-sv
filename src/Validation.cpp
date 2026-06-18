@@ -1,9 +1,7 @@
 #include "Validation.h"
-
+#include "Models.h"
 #include <iostream>
 #include <limits>
-
-#include "Models.h"
 
 namespace Validation {
 

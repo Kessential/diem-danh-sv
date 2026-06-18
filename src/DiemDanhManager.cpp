@@ -89,7 +89,7 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
   std::cout << "  " << std::left << std::setw(12) << "MSSV"
             << std::setw(25) << "Ho Ten"
             << std::right << std::setw(8) << "SoVang"
-            << std::setw(8) << "TiLe%\n";
+            << std::setw(8) << "TiLe%" << "\n";
   std::cout << "  -----------------------------------------------------\n";
 
   bool found = false;

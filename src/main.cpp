@@ -13,7 +13,7 @@ int main() {
   SetConsoleCP(CP_UTF8);
   SetConsoleOutputCP(CP_UTF8);
 #endif
-  // Duong dan cac file data
+  // --- Duong dan cac file data ---
   const char* PATH_LOPHOC = "data/lophoc.txt";
   const char* PATH_SINHVIEN = "data/sinhvien.txt";
   const char* PATH_DIEMDANH = "data/diemdanh.txt";
