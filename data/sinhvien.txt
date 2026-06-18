@@ -1,4 +1,0 @@
-23520001|Nguyen Hoang Anh|IT001
-23520002|Le Binh Bao|IT001
-23520003|Tran Cao Cuong|IT002
-23520004|Dang Dinh Duy|IT001

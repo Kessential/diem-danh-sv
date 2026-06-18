@@ -1,2 +1,2 @@
 IT001|Lap Trinh Co Ban|Tran Van A|3|1|4|A1-201|15
-IT002|Ky Thuat Lap Trinh|Nguyen Thi B|5|6|3|C2-105|10
+IT002|Ky Thuat Lap Trinh|Nguyen Thi B|2|12|6|D5-102|15
