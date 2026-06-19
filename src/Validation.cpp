@@ -7,6 +7,15 @@ namespace Validation {
 
 // --- Ham ho tro (internal) ---
 
+// Kiem tra chuoi chi chua space/tab (blank)
+static bool isBlankString(const String& s) {
+  if (s.empty()) return true;
+  for (size_t i = 0; i < s.length(); ++i) {
+    if (s[i] != ' ' && s[i] != '\t' && s[i] != '\r') return false;
+  }
+  return true;
+}
+
 // Kiem tra ky tu so
 static bool my_isdigit(char c) {
   return c >= '0' && c <= '9';
@@ -75,9 +84,9 @@ bool isValidTrangThai(char tt) {
          tt == static_cast<char>(TrangThaiDD::VANG_KHONG_PHEP);
 }
 
-// Kiem tra ma lop khong rong, toi da 50 ky tu
+// Kiem tra ma lop khong rong/blank, toi da 50 ky tu
 bool isValidMaLop(const String& maLop) {
-  return !maLop.empty() && maLop.length() <= 50;
+  return !isBlankString(maLop) && maLop.length() <= 50;
 }
 
 // --- Ham nhap lieu (Input) ---
@@ -93,7 +102,7 @@ void nhapChuoi(const char* label, String& dest) {
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       continue;
     }
-    if (temp.empty()) {
+    if (isBlankString(temp)) {
       std::cout << "  [!] Khong duoc de trong. Vui long nhap lai.\n";
       continue;
     }
@@ -164,7 +173,11 @@ bool nhapChuoiCoBaoLuu(const char* label, String& dest) {
       std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       continue;
     }
-    if (temp.empty()) return false;
+    if (temp.empty()) return false;          // Enter thuan -> giu nguyen
+    if (isBlankString(temp)) {               // Toan space -> nhap lai
+      std::cout << "  [!] Khong duoc de trong. Vui long nhap lai.\n";
+      continue;
+    }
     dest = temp;
     return true;
   }

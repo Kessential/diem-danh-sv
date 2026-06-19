@@ -53,11 +53,11 @@ int main() {
     switch (choice) {
       case 1:
         menuQuanLyLopHoc(dsLopHoc, 
-                        dsSinhVien, 
-                        dsDiemDanh, 
-                        PATH_LOPHOC,
-                        PATH_SINHVIEN, 
-                        PATH_DIEMDANH);
+                         dsSinhVien, 
+                         dsDiemDanh, 
+                         PATH_LOPHOC,
+                         PATH_SINHVIEN, 
+                         PATH_DIEMDANH);
         break;
       case 2:
         menuQuanLySinhVien(dsSinhVien, 

@@ -1,7 +1,6 @@
 #include "doctest.h"
 #include "../src/Vector.h"
 #include "../src/CustomString.h"
-#include <string>
 
 // Lớp hỗ trợ kiểm tra Memory Leak
 struct MemoryTracker {
