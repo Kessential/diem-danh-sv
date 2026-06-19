@@ -305,9 +305,9 @@ std::istream& operator>>(std::istream& is, String& str) {
   char buffer[4096];
 
   std::streamsize userWidth = is.width();
-  std::streamsize safeWidth = (userWidth > 0 && userWidth < sizeof(buffer))
+  std::streamsize safeWidth = (userWidth > 0 && userWidth < static_cast<std::streamsize>(sizeof(buffer)))
                                   ? userWidth
-                                  : sizeof(buffer);
+                                  : static_cast<std::streamsize>(sizeof(buffer) - 1);
 
   is.width(safeWidth);
 

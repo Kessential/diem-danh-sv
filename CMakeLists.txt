@@ -53,3 +53,33 @@ check_ipo_supported(RESULT ipo_supported OUTPUT error)
 if(ipo_supported)
     set_property(TARGET diemdanh PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
+
+# --- Tests ---
+set(TEST_SOURCES
+    test/test_main.cpp
+    test/CustomStringTest.cpp
+    test/VectorTest.cpp
+    test/SearchTest.cpp
+    test/SortTest.cpp
+    test/ValidationTest.cpp
+    test/FileIOTest.cpp
+    test/DiemDanhManagerTest.cpp
+    test/BaoCaoTest.cpp
+    src/CustomString.cpp
+    src/Search.cpp
+    src/FileIO.cpp
+    src/Validation.cpp
+    src/DiemDanhManager.cpp
+    src/BaoCao.cpp
+    src/Menu.cpp
+    # Note: main.cpp is excluded from tests
+)
+
+add_executable(Tests ${TEST_SOURCES})
+if(MSVC)
+    target_compile_options(Tests PRIVATE /W4 /permissive- /Zc:__cplusplus /utf-8 /EHsc)
+    target_compile_definitions(Tests PRIVATE _CRT_SECURE_NO_WARNINGS)
+else()
+    target_compile_options(Tests PRIVATE -Wall -Wextra -Wpedantic -Wshadow -Wconversion -O2)
+endif()
+

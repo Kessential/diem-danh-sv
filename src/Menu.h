@@ -15,8 +15,19 @@ void printDynamicSeparator(int width);
 void hienThiDanhSachLop(const Vector<LopHoc>& dsLop);
 void themLopHoc(Vector<LopHoc>& dsLop, const char* pathLop);
 void suaLopHoc(Vector<LopHoc>& dsLop, const char* pathLop);
-void xoaLopHoc(Vector<LopHoc>& dsLop, const char* pathLop);
-void menuQuanLyLopHoc(Vector<LopHoc>& dsLop, const char* pathLop);
+void xoaLopHoc(Vector<LopHoc>& dsLop, 
+               Vector<SinhVien>& dsSV, 
+               Vector<PhieuDiemDanh>& dsDD, 
+               const char* pathLop, 
+               const char* pathSV, 
+               const char* pathDD);
+
+void menuQuanLyLopHoc(Vector<LopHoc>& dsLop, 
+                      Vector<SinhVien>& dsSV, 
+                      Vector<PhieuDiemDanh>& dsDD, 
+                      const char* pathLop, 
+                      const char* pathSV, 
+                      const char* pathDD);
 
 //  2. Quan ly sinh vien
 void hienThiSVTheoLop(const Vector<SinhVien>& dsSV, const String& maLop);
@@ -25,10 +36,16 @@ void themSinhVien(Vector<SinhVien>& dsSV,
                   const char* pathSV);
                   
 void suaSinhVien(Vector<SinhVien>& dsSV, const char* pathSV);
-void xoaSinhVien(Vector<SinhVien>& dsSV, const char* pathSV);
+void xoaSinhVien(Vector<SinhVien>& dsSV, 
+                 Vector<PhieuDiemDanh>& dsDD, 
+                 const char* pathSV, 
+                 const char* pathDD);
+
 void menuQuanLySinhVien(Vector<SinhVien>& dsSV, 
                         Vector<LopHoc>& dsLop, 
-                        const char* pathSV);
+                        Vector<PhieuDiemDanh>& dsDD,
+                        const char* pathSV,
+                        const char* pathDD);
 
 //  3. Diem danh
 void menuDiemDanh(Vector<LopHoc>& dsLop, 

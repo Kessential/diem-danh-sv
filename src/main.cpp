@@ -51,13 +51,41 @@ int main() {
     hienThiMenuChinh();
     choice = Validation::nhapSoNguyen("  Chon chuc nang", 0, 6);
     switch (choice) {
-    case 1: menuQuanLyLopHoc(dsLopHoc, PATH_LOPHOC); break;
-    case 2: menuQuanLySinhVien(dsSinhVien, dsLopHoc, PATH_SINHVIEN); break;
-    case 3: menuDiemDanh(dsLopHoc, dsSinhVien, dsDiemDanh, PATH_DIEMDANH); break;
-    case 4: menuTimKiem(dsLopHoc, dsSinhVien, dsDiemDanh); break;
-    case 5: menuSapXep(dsLopHoc, dsSinhVien, dsDiemDanh, PATH_LOPHOC, PATH_SINHVIEN, PATH_DIEMDANH); break;
-    case 6: menuBaoCao(dsLopHoc, dsSinhVien, dsDiemDanh, DIR_EXPORT); break;
-    case 0: std::cout << "\n  Tam biet! Hen gap lai.\n\n"; break;
+      case 1:
+        menuQuanLyLopHoc(dsLopHoc, 
+                        dsSinhVien, 
+                        dsDiemDanh, 
+                        PATH_LOPHOC,
+                        PATH_SINHVIEN, 
+                        PATH_DIEMDANH);
+        break;
+      case 2:
+        menuQuanLySinhVien(dsSinhVien, 
+                           dsLopHoc, 
+                           dsDiemDanh, 
+                           PATH_SINHVIEN,
+                           PATH_DIEMDANH);
+        break;
+      case 3:
+        menuDiemDanh(dsLopHoc, dsSinhVien, dsDiemDanh, PATH_DIEMDANH);
+        break;
+      case 4:
+        menuTimKiem(dsLopHoc, dsSinhVien, dsDiemDanh);
+        break;
+      case 5:
+        menuSapXep(dsLopHoc, 
+                   dsSinhVien, 
+                   dsDiemDanh, 
+                   PATH_LOPHOC, 
+                   PATH_SINHVIEN,
+                   PATH_DIEMDANH);
+        break;
+      case 6:
+        menuBaoCao(dsLopHoc, dsSinhVien, dsDiemDanh, DIR_EXPORT);
+        break;
+      case 0:
+        std::cout << "\n  Tam biet! Hen gap lai.\n\n";
+        break;
     }
   } while (choice != 0);
 

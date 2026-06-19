@@ -1,145 +1,226 @@
 #include "doctest.h"
-#include <string>
-#include <stdexcept>
-#include <vector>
 #include "../src/Vector.h"
+#include "../src/CustomString.h"
+#include <string>
 
-// =========================================================
-// CLASS 1: Dùng để test rò rỉ bộ nhớ (Memory Leak)
-// =========================================================
-struct Tracker {
-    static int alive_count; 
-    int id;
+// Lớp hỗ trợ kiểm tra Memory Leak
+struct MemoryTracker {
+    static int alive_count;
+    int data;
 
-    Tracker(int i = 0) : id(i) { alive_count++; }
-    Tracker(const Tracker& other) : id(other.id) { alive_count++; }
-    Tracker(Tracker&& other) noexcept : id(other.id) { alive_count++; }
-    Tracker& operator=(const Tracker& other) { id = other.id; return *this; }
-    Tracker& operator=(Tracker&& other) noexcept { id = other.id; return *this; }
-    ~Tracker() { alive_count--; }
+    MemoryTracker(int d = 0) : data(d) { alive_count++; }
+    MemoryTracker(const MemoryTracker& other) : data(other.data) { alive_count++; }
+    MemoryTracker(MemoryTracker&& other) noexcept : data(other.data) { alive_count++; }
+    MemoryTracker& operator=(const MemoryTracker& other) { data = other.data; return *this; }
+    MemoryTracker& operator=(MemoryTracker&& other) noexcept { data = other.data; return *this; }
+    ~MemoryTracker() { alive_count--; }
 };
-int Tracker::alive_count = 0;
+int MemoryTracker::alive_count = 0;
 
-// =========================================================
-// CLASS 2: Dùng để giả lập lỗi khi Copy
-// =========================================================
-struct ThrowingClass {
-    int val;
-    ThrowingClass(int v = 0) : val(v) {}
-    
-    ThrowingClass& operator=(const ThrowingClass& other) {
-        if (other.val == -1) {
-            throw std::runtime_error("Loi copy! Gia lap may tinh het RAM hoac loi xay ra.");
-        }
-        val = other.val;
-        return *this;
-    }
-};
-
-TEST_CASE("Vector - Co ban va Edge Cases") {
+TEST_CASE("Vector - Khởi tạo và cơ bản") {
     Vector<int> v;
-    
-    // Pop back khi rỗng không crash
-    v.pop_back(); 
-    v.pop_back();
     CHECK(v.size() == 0);
+    CHECK(v.capacity() == 0);
+    CHECK(v.empty() == true);
 
-    // Gọi back() khi rỗng là Undefined Behavior trong Vector này, không test Exception.
-    // CHECK_THROWS_AS(v.back(), std::out_of_range);
-
-    // Clear khi rỗng an toàn
-    v.clear();
-    CHECK(v.size() == 0);
+    v.push_back(10);
+    CHECK(v.size() == 1);
+    CHECK(v.capacity() >= 1);
+    CHECK(v.empty() == false);
+    CHECK(v[0] == 10);
 }
 
-TEST_CASE("Vector - Memory Leak") {
-    Tracker::alive_count = 0;
+TEST_CASE("Vector - Thêm và Xóa phần tử (push_back, pop_back, remove, clear)") {
+    Vector<int> v;
+    for (int i = 0; i < 5; ++i) {
+        v.push_back(i * 10);
+    }
+    CHECK(v.size() == 5);
+    CHECK(v.capacity() >= 5);
 
-    {
-        Vector<Tracker> v;
-        v.push_back(Tracker(1));
-        v.push_back(Tracker(2));
-        v.push_back(Tracker(3));
-        
-        CHECK(Tracker::alive_count == v.capacity()); // Vector dùng new T[] nên alive_count = capacity
-        
+    SUBCASE("Pop back") {
         v.pop_back();
-        CHECK(Tracker::alive_count == v.capacity());
-
-        v.clear();
-        CHECK(Tracker::alive_count == v.capacity());
-        
-        v.push_back(Tracker(4));
-        v.push_back(Tracker(5));
+        CHECK(v.size() == 4);
+        CHECK(v.back() == 30);
     }
 
-    CHECK(Tracker::alive_count == 0);
+    SUBCASE("Pop back quá mức (dưới 0)") {
+        v.clear();
+        v.pop_back(); // Phải an toàn, không crash
+        CHECK(v.size() == 0);
+    }
+
+    SUBCASE("Remove phần tử ở giữa") {
+        v.remove(2); // Xóa 20
+        CHECK(v.size() == 4);
+        CHECK(v[2] == 30);
+    }
+
+    SUBCASE("Remove phần tử ngoài phạm vi") {
+        v.remove(10); // Phải an toàn, không đổi
+        CHECK(v.size() == 5);
+    }
+
+    SUBCASE("Clear vector") {
+        v.clear();
+        CHECK(v.size() == 0);
+        CHECK(v.empty() == true);
+    }
 }
 
-TEST_CASE("Vector - Tu gan va Copy/Move") {
+TEST_CASE("Vector - Copy và Move Semantics") {
     Vector<int> v1;
-    v1.push_back(10);
-    v1.push_back(20);
+    v1.push_back(1); v1.push_back(2);
 
-    v1 = v1; 
-    CHECK(v1.size() == 2);
-    CHECK(v1[0] == 10);
+    SUBCASE("Copy constructor") {
+        Vector<int> v2(v1);
+        CHECK(v2.size() == 2);
+        CHECK(v2[0] == 1);
+        v2[0] = 99;
+        CHECK(v1[0] == 1); // Deep copy
+    }
 
-    v1 = std::move(v1);
-    CHECK(v1.size() == 2);
-    CHECK(v1[1] == 20);
+    SUBCASE("Copy assignment") {
+        Vector<int> v2;
+        v2 = v1;
+        CHECK(v2.size() == 2);
+        v2[1] = 99;
+        CHECK(v1[1] == 2);
+    }
+
+    SUBCASE("Tự gán (Self-assignment)") {
+        v1 = v1;
+        CHECK(v1.size() == 2);
+        CHECK(v1[0] == 1);
+    }
+
+    SUBCASE("Move constructor") {
+        Vector<int> v2(std::move(v1));
+        CHECK(v2.size() == 2);
+        CHECK(v1.size() == 0);
+        CHECK(v1.capacity() == 0);
+    }
+
+    SUBCASE("Move assignment") {
+        Vector<int> v2;
+        v2 = std::move(v1);
+        CHECK(v2.size() == 2);
+        CHECK(v1.size() == 0);
+    }
 }
 
+TEST_CASE("Vector - Iterator") {
+    Vector<int> v;
+    v.push_back(10); v.push_back(20); v.push_back(30);
 
+    int sum = 0;
+    for (auto val : v) {
+        sum += val;
+    }
+    CHECK(sum == 60);
+}
+
+TEST_CASE("Vector - Quản lý bộ nhớ (Tránh Memory Leak)") {
+    MemoryTracker::alive_count = 0;
+    {
+        Vector<MemoryTracker> v;
+        v.push_back(MemoryTracker(1));
+        v.push_back(MemoryTracker(2));
+        
+        // Vì Vector cấp phát theo capacity, số alive_count = capacity (khởi tạo default)
+        CHECK(MemoryTracker::alive_count == v.capacity());
+
+        v.pop_back();
+        CHECK(MemoryTracker::alive_count == v.capacity()); // Xóa logic, bộ nhớ vật lý vẫn giữ
+        
+        Vector<MemoryTracker> v2(v); // Copy
+        CHECK(MemoryTracker::alive_count == v.capacity() + v2.capacity());
+    }
+    // Khi thoát block, tất cả phải được hủy
+    CHECK(MemoryTracker::alive_count == 0);
+}
 
 TEST_CASE("Vector - Crash & UB Edge Cases") {
-    Vector<int> v_empty1;
-    Vector<int> v_empty2(v_empty1);
-    Vector<int> v_empty3;
-    v_empty3 = v_empty1; 
-    Vector<int> v_empty4(std::move(v_empty2)); 
-    Vector<int> v_empty5;
-    v_empty5 = std::move(v_empty3);
-    CHECK(v_empty5.size() == 0);
+    Vector<int> v_empty;
+    Vector<int> v_copy_empty(v_empty);
+    CHECK(v_copy_empty.size() == 0);
+    
+    v_copy_empty = v_empty;
+    CHECK(v_copy_empty.size() == 0);
 
-    Vector<int> v_chain;
-    v_chain.push_back(1);
-    v_chain = v_chain = v_chain;
-    CHECK(v_chain.size() == 1);
-    CHECK(v_chain[0] == 1);
-
-    Vector<int> v_reused;
-    for (int i = 0; i < 1000; ++i) v_reused.push_back(i);
-    v_reused.clear();
-    v_reused.push_back(999);
-    CHECK(v_reused.size() == 1);
-    CHECK(v_reused[0] == 999);
-
-    Vector<int> v_underflow;
-    v_underflow.push_back(1);
-    v_underflow.pop_back(); 
-    v_underflow.pop_back(); 
-    CHECK(v_underflow.size() == 0);
+    // Chèn liên tục rất nhiều phần tử để test grow
+    Vector<int> v_grow;
+    for(int i = 0; i < 10000; i++) {
+        v_grow.push_back(i);
+    }
+    CHECK(v_grow.size() == 10000);
+    CHECK(v_grow[9999] == 9999);
 }
 
-TEST_CASE("Vector - Kieu du lieu STL") {
-    Vector<std::string> v_str;
-    std::string long_str = "Mot chuoi cuc ky dai de test viec cap phat tren Heap cua std::string tranh viec bi SS0 (Small String Optimization) che mat loi";
-    v_str.push_back(long_str);
-    v_str.push_back(std::move(long_str));
-    v_str.pop_back();
-    v_str.clear();
-    CHECK(v_str.size() == 0);
+TEST_CASE("Vector - Kieu du lieu CustomString") {
+    SUBCASE("Them va xoa chuoi dai de kiem tra memory leak") {
+        Vector<String> v_str;
+        
+        // Them cac chuoi dai de bat buoc String phai cap phat dong tren heap
+        String long_str1("Mot chuoi rat dai thu nhat de kiem tra viec cap phat bo nho tren heap cua CustomString");
+        String long_str2("Mot chuoi rat dai thu hai cung voi muc dich tuong tu nham tranh SSO (Small String Optimization) neu co");
+        
+        v_str.push_back(long_str1);
+        v_str.push_back(long_str2);
+        
+        CHECK(v_str.size() == 2);
+        CHECK(v_str[0] == long_str1);
+        CHECK(v_str[1] == long_str2);
+        
+        v_str.pop_back();
+        CHECK(v_str.size() == 1);
+        CHECK(v_str[0] == long_str1);
+        
+        v_str.clear();
+        CHECK(v_str.size() == 0);
+    }
 
-    Vector<std::vector<int>> v_vec;
-    std::vector<int> stl_v1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    v_vec.push_back(stl_v1); 
-    v_vec.push_back(std::vector<int>{11, 12, 13, 14, 15}); 
+    SUBCASE("Copy va Move Semantics voi CustomString") {
+        Vector<String> v1;
+        v1.push_back(String("String A"));
+        v1.push_back(String("String B"));
+        
+        Vector<String> v2 = v1; // Copy constructor
+        CHECK(v2.size() == 2);
+        CHECK(v2[0] == "String A");
+        CHECK(v2[1] == "String B");
+        
+        v2[0] = String("Modified A");
+        CHECK(v1[0] == "String A"); // v1 khong bi thay doi
+        
+        Vector<String> v3;
+        v3 = std::move(v2); // Move assignment
+        CHECK(v3.size() == 2);
+        CHECK(v3[0] == "Modified A");
+        CHECK(v2.size() == 0); // v2 da bi move
+        
+        // Tu move
+        Vector<String>& v3_ref = v3;
+        v3 = std::move(v3_ref);
+        CHECK(v3.size() == 2);
+        CHECK(v3[0] == "Modified A");
+    }
     
-    Vector<std::vector<int>> v_vec_copy = v_vec; 
-    Vector<std::vector<int>> v_vec_assign;
-    v_vec_assign = v_vec_copy; 
-    
-    v_vec.pop_back(); 
-    CHECK(v_vec.size() == 1);
+    SUBCASE("Vector<Vector<String>> Edge Cases") {
+        Vector<Vector<String>> v_2d;
+        Vector<String> row1;
+        row1.push_back("A1");
+        row1.push_back("A2");
+        
+        v_2d.push_back(row1); // Copy
+        CHECK(v_2d.size() == 1);
+        CHECK(v_2d[0][0] == "A1");
+        
+        v_2d.push_back(std::move(row1)); // Move
+        CHECK(v_2d.size() == 2);
+        CHECK(row1.size() == 0);
+        
+        v_2d.clear();
+        CHECK(v_2d.size() == 0);
+    }
 }

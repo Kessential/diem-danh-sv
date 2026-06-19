@@ -28,7 +28,7 @@ ThongKeSinhVien tinhTiLeVang(Vector<PhieuDiemDanh>& dsDD,
   }
 
   if (tongSoBuoi > 0) {
-    tk.tiLe = (float)tk.soVangKhongPhep / tongSoBuoi * 100.0f;
+    tk.tiLe = static_cast<float>(tk.soVangKhongPhep) / static_cast<float>(tongSoBuoi) * 100.0f;
   } else {
     tk.tiLe = 0.0f;
   }

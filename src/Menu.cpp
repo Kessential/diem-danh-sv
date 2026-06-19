@@ -127,7 +127,12 @@ void suaLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
   std::cout << "  [OK] Da cap nhat lop '" << maLop << "'.\n";
 }
 
-void xoaLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
+void xoaLopHoc(Vector<LopHoc> &dsLop, 
+               Vector<SinhVien>& dsSV, 
+               Vector<PhieuDiemDanh>& dsDD, 
+               const char* pathLop, 
+               const char* pathSV, 
+               const char* pathDD) {
   String maLop;
   std::cout << "\n  ─── XOA LOP HOC ───\n";
   Validation::nhapChuoi("  Ma lop can xoa", maLop);
@@ -136,12 +141,48 @@ void xoaLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
     std::cout << "  [!] Khong tim thay lop '" << maLop << "'.\n";
     return;
   }
+  
+  int countSV = 0;
+  for (int i = 0; i < (int)dsSV.size(); ++i) {
+    if (dsSV[i].maLop == maLop) countSV++;
+  }
+  int countDD = 0;
+  for (int i = 0; i < (int)dsDD.size(); ++i) {
+    if (dsDD[i].maLop == maLop) countDD++;
+  }
+
+  if (countSV > 0 || countDD > 0) {
+    std::cout << "  [!] Lop hoc nay dang co " << countSV << " sinh vien va " << countDD << " phieu diem danh.\n";
+    if (!Validation::nhapXacNhan("  Ban co chac chan muon xoa (moi du lieu lien quan se bi mat)?")) {
+      std::cout << "  [I] Da huy thao tac xoa.\n";
+      return;
+    }
+  }
+
+  for (int i = (int)dsDD.size() - 1; i >= 0; --i) {
+    if (dsDD[i].maLop == maLop) {
+      dsDD.remove(i);
+    }
+  }
+  for (int i = (int)dsSV.size() - 1; i >= 0; --i) {
+    if (dsSV[i].maLop == maLop) {
+      dsSV.remove(i);
+    }
+  }
+
   dsLop.remove(idx);
+  FileIO::saveDiemDanh(pathDD, dsDD);
+  FileIO::saveSinhVien(pathSV, dsSV);
   FileIO::saveLopHoc(pathLop, dsLop);
-  std::cout << "  [OK] Da xoa lop '" << maLop << "'.\n";
+  std::cout << "  [OK] Da xoa lop '" << maLop << "' va tat ca du lieu lien quan.\n";
 }
 
-void menuQuanLyLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
+void menuQuanLyLopHoc(Vector<LopHoc> &dsLop, 
+                      Vector<SinhVien>& dsSV, 
+                      Vector<PhieuDiemDanh>& dsDD, 
+                      const char* pathLop, 
+                      const char* pathSV, 
+                      const char* pathDD) {
   int choice;
   do {
     printHeader("1. QUAN LY LOP HOC");
@@ -163,7 +204,7 @@ void menuQuanLyLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
       suaLopHoc(dsLop, pathLop);
       break;
     case 4:
-      xoaLopHoc(dsLop, pathLop);
+      xoaLopHoc(dsLop, dsSV, dsDD, pathLop, pathSV, pathDD);
       break;
     }
   } while (choice != 0);
@@ -236,7 +277,10 @@ void suaSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
   std::cout << "  [OK] Da cap nhat sinh vien '" << mssv << "'.\n";
 }
 
-void xoaSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
+void xoaSinhVien(Vector<SinhVien> &dsSV, 
+                 Vector<PhieuDiemDanh>& dsDD, 
+                 const char* pathSV, 
+                 const char* pathDD) {
   String mssv;
   std::cout << "\n  ─── XOA SINH VIEN ───\n";
   Validation::nhapChuoi("  MSSV can xoa", mssv);
@@ -245,14 +289,37 @@ void xoaSinhVien(Vector<SinhVien> &dsSV, const char* pathSV) {
     std::cout << "  [!] Khong tim thay '" << mssv << "'.\n";
     return;
   }
+
+  int countDD = 0;
+  for (int i = 0; i < (int)dsDD.size(); ++i) {
+    if (dsDD[i].mssv == mssv) countDD++;
+  }
+
+  if (countDD > 0) {
+    std::cout << "  [!] Sinh vien nay dang co " << countDD << " phieu diem danh.\n";
+    if (!Validation::nhapXacNhan("  Ban co chac chan muon xoa (moi du lieu lien quan se bi mat)?")) {
+      std::cout << "  [I] Da huy thao tac xoa.\n";
+      return;
+    }
+  }
+
+  for (int i = (int)dsDD.size() - 1; i >= 0; --i) {
+    if (dsDD[i].mssv == mssv) {
+      dsDD.remove(i);
+    }
+  }
+
   dsSV.remove(idx);
+  FileIO::saveDiemDanh(pathDD, dsDD);
   FileIO::saveSinhVien(pathSV, dsSV);
-  std::cout << "  [OK] Da xoa sinh vien '" << mssv << "'.\n";
+  std::cout << "  [OK] Da xoa sinh vien '" << mssv << "' va tat ca du lieu lien quan.\n";
 }
 
 void menuQuanLySinhVien(Vector<SinhVien> &dsSV, 
                         Vector<LopHoc> &dsLop, 
-                        const char* pathSV) {
+                        Vector<PhieuDiemDanh>& dsDD,
+                        const char* pathSV,
+                        const char* pathDD) {
   int choice;
   do {
     printHeader("2. QUAN LY SINH VIEN");
@@ -281,7 +348,7 @@ void menuQuanLySinhVien(Vector<SinhVien> &dsSV,
       suaSinhVien(dsSV, pathSV);
       break;
     case 4:
-      xoaSinhVien(dsSV, pathSV);
+      xoaSinhVien(dsSV, dsDD, pathSV, pathDD);
       break;
     }
   } while (choice != 0);

@@ -1,79 +1,108 @@
 #include "doctest.h"
-#include <string>
-#include <vector>
-#include "../src/Vector.h"
 #include "../src/Sort.h"
+#include "../src/CustomString.h"
 
-template <typename T>
-bool is_sorted_custom(const Vector<T>& arr) {
-    if (arr.size() <= 1) return true;
-    for (size_t i = 0; i < arr.size() - 1; ++i) {
-        if (arr[i + 1] < arr[i]) return false;
+TEST_CASE("Sort - Sắp xếp cơ bản") {
+    SUBCASE("Mảng số nguyên") {
+        Vector<int> v;
+        v.push_back(5); v.push_back(2); v.push_back(8); v.push_back(1); v.push_back(3);
+        
+        Sort::sort(v);
+        
+        CHECK(v[0] == 1);
+        CHECK(v[1] == 2);
+        CHECK(v[2] == 3);
+        CHECK(v[3] == 5);
+        CHECK(v[4] == 8);
     }
-    return true;
-}
 
-TEST_CASE("Sort - Mang co ban") {
-    Vector<int> empty_arr;
-    Sort::sort(empty_arr);
-    CHECK(is_sorted_custom(empty_arr));
-
-    Vector<int> single_arr;
-    single_arr.push_back(42);
-    Sort::sort(single_arr);
-    CHECK(is_sorted_custom(single_arr));
-}
-
-TEST_CASE("Sort - Mang dac biet") {
-    Vector<int> reverse_arr;
-    for (int i = 1000; i > 0; --i) reverse_arr.push_back(i);
-    Sort::sort(reverse_arr);
-    CHECK(is_sorted_custom(reverse_arr));
-
-    Vector<int> all_same_arr;
-    for (int i = 0; i < 1000; ++i) all_same_arr.push_back(7);
-    Sort::sort(all_same_arr);
-    CHECK(is_sorted_custom(all_same_arr));
-}
-
-TEST_CASE("Sort - Kieu du lieu STL (std::string)") {
-    Vector<std::string> str_arr;
-    str_arr.push_back("Zebra");
-    str_arr.push_back("Apple");
-    str_arr.push_back("Mango");
-    str_arr.push_back("Banana");
-    str_arr.push_back("Orange");
-    str_arr.push_back("Apple");
-    Sort::sort(str_arr);
-    CHECK(is_sorted_custom(str_arr));
-}
-
-TEST_CASE("Sort - Gia tri gioi han & Rang cua") {
-    Vector<int> limits_arr;
-    limits_arr.push_back(2147483647);
-    limits_arr.push_back(-2147483648);
-    limits_arr.push_back(0);
-    limits_arr.push_back(-1);
-    limits_arr.push_back(1);
-    Sort::sort(limits_arr);
-    CHECK(is_sorted_custom(limits_arr));
-
-    Vector<int> interleaved_arr;
-    for (int i = 0; i < 500; ++i) {
-        interleaved_arr.push_back(10000 - i);
-        interleaved_arr.push_back(i);
+    SUBCASE("Sắp xếp giảm dần (Custom Comparator)") {
+        Vector<int> v;
+        v.push_back(5); v.push_back(2); v.push_back(8); v.push_back(1); v.push_back(3);
+        
+        Sort::sort(v, [](const int& a, const int& b) { return a > b; });
+        
+        CHECK(v[0] == 8);
+        CHECK(v[1] == 5);
+        CHECK(v[2] == 3);
+        CHECK(v[3] == 2);
+        CHECK(v[4] == 1);
     }
-    Sort::sort(interleaved_arr);
-    CHECK(is_sorted_custom(interleaved_arr));
 }
 
-TEST_CASE("Sort - Kieu std::vector") {
-    Vector<std::vector<int>> vec_of_vec;
-    vec_of_vec.push_back({10, 20, 30});
-    vec_of_vec.push_back({1, 2});
-    vec_of_vec.push_back({5, 5, 5, 5});
-    vec_of_vec.push_back({10, 20});
-    vec_of_vec.push_back({0});
-    Sort::sort(vec_of_vec);
-    CHECK(is_sorted_custom(vec_of_vec));
+TEST_CASE("Sort - Edge Cases") {
+    SUBCASE("Mảng rỗng") {
+        Vector<int> v;
+        Sort::sort(v); // Không được crash
+        CHECK(v.size() == 0);
+    }
+
+    SUBCASE("Mảng 1 phần tử") {
+        Vector<int> v;
+        v.push_back(42);
+        Sort::sort(v);
+        CHECK(v[0] == 42);
+        CHECK(v.size() == 1);
+    }
+
+    SUBCASE("Mảng đã được sắp xếp sẵn") {
+        Vector<int> v;
+        for (int i = 0; i < 10; ++i) v.push_back(i);
+        Sort::sort(v);
+        for (int i = 0; i < 10; ++i) CHECK(v[i] == i);
+    }
+
+    SUBCASE("Mảng sắp xếp ngược") {
+        Vector<int> v;
+        for (int i = 10; i > 0; --i) v.push_back(i);
+        Sort::sort(v);
+        for (int i = 0; i < 10; ++i) CHECK(v[i] == i + 1);
+    }
+
+    SUBCASE("Mảng tất cả phần tử giống nhau") {
+        Vector<int> v;
+        for (int i = 0; i < 5; ++i) v.push_back(7);
+        Sort::sort(v);
+        for (int i = 0; i < 5; ++i) CHECK(v[i] == 7);
+    }
+}
+
+TEST_CASE("Sort - Stress Test (Hoare Quicksort & Insertion Sort fallback)") {
+    Vector<int> v;
+    // Chèn 1000 phần tử ngẫu nhiên (hoặc giảm dần xen kẽ) để kích hoạt Quicksort cắt phân hoạch
+    for (int i = 0; i < 1000; ++i) {
+        v.push_back((i % 2 == 0) ? i : 1000 - i);
+    }
+    
+    Sort::sort(v);
+    
+    bool is_sorted = true;
+    for (size_t i = 0; i < v.size() - 1; ++i) {
+        if (v[i] > v[i+1]) {
+            is_sorted = false;
+            break;
+        }
+    }
+    CHECK(is_sorted == true);
+}
+
+TEST_CASE("Sort - Kiểu dữ liệu phức tạp") {
+    struct Item {
+        int id;
+        String name;
+    };
+
+    Vector<Item> v;
+    Item i1; i1.id = 2; i1.name = "B"; v.push_back(std::move(i1));
+    Item i2; i2.id = 1; i2.name = "A"; v.push_back(std::move(i2));
+    Item i3; i3.id = 3; i3.name = "C"; v.push_back(std::move(i3));
+
+    Sort::sort(v, [](const Item& a, const Item& b) {
+        return a.id < b.id;
+    });
+
+    CHECK(v[0].id == 1);
+    CHECK(v[1].id == 2);
+    CHECK(v[2].id == 3);
+    CHECK(v[0].name == "A");
 }
