@@ -55,7 +55,7 @@ void printDynamicSeparator(int width) {
 void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
   printDynamicSeparator(84);
   if (dsLop.size() == 0) {
-    std::cout << "  Chua co lop hoc nao.\n";
+    std::cout << "  [I] Chua co lop hoc nao.\n";
     return;
   }
   std::cout << "  " << std::left << std::setw(10) << "Ma Lop"
@@ -226,10 +226,10 @@ void hienThiSVTheoLop(const Vector<SinhVien> &dsSV, const String &maLop) {
     }
   }
   if (count == 0)
-    std::cout << "  (Khong co sinh vien nao)\n";
+    std::cout << "  [I] Khong co sinh vien nao.\n";
   else {
     printDynamicSeparator(37);
-    std::cout << "\n  Tong cong: " << count << " sinh vien.\n";
+    std::cout << "\n  [I] Tong cong: " << count << " sinh vien.\n";
   }
 }
 
@@ -286,7 +286,7 @@ void xoaSinhVien(Vector<SinhVien> &dsSV,
   Validation::nhapChuoi("  MSSV can xoa", mssv);
   int idx = Search::timSinhVienTheoMSSV(dsSV, mssv);
   if (idx == -1) {
-    std::cout << "  [!] Khong tim thay '" << mssv << "'.\n";
+    std::cout << "  [!] Khong tim thay MSSV '" << mssv << "'.\n";
     return;
   }
 
@@ -402,7 +402,7 @@ void menuDiemDanh(Vector<LopHoc> &dsLop,
       Vector<PhieuDiemDanh> result;
       Search::timDiemDanhTheoNgayVaLop(dsDD, ngay, maLop, result);
       if (result.size() == 0) {
-        std::cout << "  Khong co du lieu diem danh ngay " << ngay << " lop " << maLop << ".\n";
+        std::cout << "  [I] Khong co du lieu diem danh ngay " << ngay << " lop " << maLop << ".\n";
         break;
       }
       printDynamicSeparator(57);
@@ -425,12 +425,23 @@ void menuDiemDanh(Vector<LopHoc> &dsLop,
       if (Validation::nhapXacNhan("\n  Ban co muon sua diem danh?")) {
         String mssv;
         Validation::nhapChuoi("  MSSV can sua", mssv);
-        TrangThaiDD ttMoi = Validation::nhapTrangThai(mssv.c_str());
-        if (DiemDanhManager::suaDiemDanh(dsDD, mssv, maLop, ngay, ttMoi)) {
-          FileIO::saveDiemDanh(pathDD, dsDD);
-          std::cout << "  [OK] Da cap nhat diem danh.\n";
+        // Kiem tra MSSV co phieu diem danh trong buoi nay khong
+        Vector<PhieuDiemDanh> check;
+        Search::timDiemDanhTheoMSSVvaLop(dsDD, mssv, maLop, check);
+        bool mssvTonTai = false;
+        for (int i = 0; i < (int)check.size(); ++i) {
+          if (check[i].ngay == ngay) { mssvTonTai = true; break; }
+        }
+        if (!mssvTonTai) {
+          std::cout << "  [!] MSSV '" << mssv << "' khong co trong danh sach diem danh buoi nay.\n";
         } else {
-          std::cout << "  [!] Khong tim thay phieu diem danh.\n";
+          TrangThaiDD ttMoi = Validation::nhapTrangThai(mssv.c_str());
+          if (DiemDanhManager::suaDiemDanh(dsDD, mssv, maLop, ngay, ttMoi)) {
+            FileIO::saveDiemDanh(pathDD, dsDD);
+            std::cout << "  [OK] Da cap nhat diem danh.\n";
+          } else {
+            std::cout << "  [!] Khong tim thay phieu diem danh.\n";
+          }
         }
       }
       break;
@@ -482,7 +493,7 @@ void menuTimKiem(Vector<LopHoc> &dsLop,
         break;
       }
       printDynamicSeparator(57);
-      std::cout << "\n  Ket qua — " << (int)result.size() << " phieu:\n";
+      std::cout << "\n  [I] Ket qua — " << (int)result.size() << " phieu:\n";
       std::cout << "  " << std::left << std::setw(12) << "MSSV"
                 << std::setw(30) << "Ho Ten"
                 << "Trang thai\n";
@@ -526,7 +537,7 @@ void menuTimKiem(Vector<LopHoc> &dsLop,
       }
       printDynamicSeparator(44);
       if (result.size() == 0)
-        std::cout << "  Khong co du lieu.\n";
+        std::cout << "  [I] Khong co du lieu.\n";
       break;
     }
     }

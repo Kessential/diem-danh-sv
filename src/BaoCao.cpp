@@ -79,7 +79,7 @@ void thongKeSiSoTheoBuoi(Vector<PhieuDiemDanh>& dsDD, const String& maLop) {
   }
   printDynamicSeparator(54);
   if (ngayDD.size() == 0) {
-    std::cout << "  Chua co du lieu diem danh nao.\n";
+    std::cout << "  [I] Chua co du lieu diem danh nao.\n";
   }
 }
 

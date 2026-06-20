@@ -26,17 +26,17 @@ int main() {
 
   // --- Nap du lieu tu file ---
   if (!FileIO::loadLopHoc(PATH_LOPHOC, dsLopHoc)) {
-    std::cout << "[INFO] Khong doc duoc '" << PATH_LOPHOC
+    std::cout << "[I] Khong doc duoc '" << PATH_LOPHOC
               << "', bat dau voi danh sach rong.\n";
   }
 
   if (!FileIO::loadSinhVien(PATH_SINHVIEN, dsSinhVien)) {
-    std::cout << "[INFO] Khong doc duoc '" << PATH_SINHVIEN
+    std::cout << "[I] Khong doc duoc '" << PATH_SINHVIEN
               << "', bat dau voi danh sach rong.\n";
   }
 
   if (!FileIO::loadDiemDanh(PATH_DIEMDANH, dsDiemDanh)) {
-    std::cout << "[INFO] Khong doc duoc '" << PATH_DIEMDANH
+    std::cout << "[I] Khong doc duoc '" << PATH_DIEMDANH
               << "', bat dau voi danh sach rong.\n";
   }
 

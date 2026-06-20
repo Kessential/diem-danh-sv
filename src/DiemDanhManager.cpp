@@ -108,7 +108,7 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
   }
 // comment lai o day ti bo sung them phan cot canh bao?
   if (!found) {
-    std::cout << "  Khong co sinh vien nao bi canh bao cam thi.\n";
+    std::cout << "  [I] Khong co sinh vien nao bi canh bao cam thi.\n";
   }
 }
 
