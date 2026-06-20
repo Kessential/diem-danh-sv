@@ -25,11 +25,11 @@ TEST_CASE("BaoCao - xayDungThongKe (Theo sinh viên)") {
             CHECK(result[0].mssv == "HE1");
             CHECK(result[0].soVang == 3);
             CHECK(result[0].soVangKhongPhep == 2);
-            CHECK(result[0].tiLe == doctest::Approx(20.0f));
+            CHECK(result[0].tiLeVangKP == doctest::Approx(20.0f));
 
             CHECK(result[1].mssv == "HE2");
             CHECK(result[1].soVang == 0);
-            CHECK(result[1].tiLe == doctest::Approx(0.0f));
+            CHECK(result[1].tiLeVangKP == doctest::Approx(0.0f));
         }
     }
 
@@ -48,7 +48,7 @@ TEST_CASE("BaoCao - xayDungThongKe (Theo sinh viên)") {
         CHECK(result.size() == 1);
         if(result.size() == 1) {
             CHECK(result[0].mssv == "HE3");
-            CHECK(result[0].tiLe == doctest::Approx(0.0f));
+            CHECK(result[0].tiLeVangKP == doctest::Approx(0.0f));
         }
     }
 

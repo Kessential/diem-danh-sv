@@ -10,7 +10,7 @@ TEST_CASE("DiemDanhManager - tinhTiLeVang") {
         CHECK(tk.mssv == "HE1");
         CHECK(tk.soVang == 0);
         CHECK(tk.soVangKhongPhep == 0);
-        CHECK(tk.tiLe == doctest::Approx(0.0f));
+        CHECK(tk.tiLeVangKP == doctest::Approx(0.0f));
         CHECK(tk.nguyCoCamThi == false);
     }
 
@@ -20,7 +20,7 @@ TEST_CASE("DiemDanhManager - tinhTiLeVang") {
 
         ThongKeSinhVien tk = DiemDanhManager::tinhTiLeVang(dsDD, sv, 10);
         CHECK(tk.soVang == 0);
-        CHECK(tk.tiLe == doctest::Approx(0.0f));
+        CHECK(tk.tiLeVangKP == doctest::Approx(0.0f));
         CHECK(tk.nguyCoCamThi == false);
     }
 
@@ -32,8 +32,8 @@ TEST_CASE("DiemDanhManager - tinhTiLeVang") {
         ThongKeSinhVien tk = DiemDanhManager::tinhTiLeVang(dsDD, sv, 10);
         CHECK(tk.soVang == 3);
         CHECK(tk.soVangKhongPhep == 2);
-        CHECK(tk.tiLe == doctest::Approx(20.0f)); 
-        CHECK(tk.nguyCoCamThi == false); // <= 20%
+        CHECK(tk.tiLeVangKP == doctest::Approx(20.0f)); 
+        CHECK(tk.nguyCoCamThi == true); // KP >= 20% → canh bao
     }
 }
 

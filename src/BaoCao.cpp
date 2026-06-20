@@ -98,23 +98,34 @@ void danhSachVangNhieu(Vector<SinhVien>& dsSV,
   std::cout << "\n  === TOP " << in << " SINH VIEN VANG NHIEU NHAT — Lop "
             << maLop << " ===\n\n";
 
-  printDynamicSeparator(61);
-  std::cout << "  " << std::left << std::setw(4) << "STT"
-            << std::setw(12) << "MSSV" 
-            << std::setw(17) << "Ho Ten" 
-            << std::right << std::setw(8) << "SoVang" 
-            << std::setw(8) << "TiLe%" << std::setw(12) << "CamThi?" << "\n";
-  printDynamicSeparator(61);
+  // separator(90) + prefix 2 = 92 ky tu/dong
+  printDynamicSeparator(90);
+  std::cout << "  " << std::left  << std::setw(4)  << "STT"
+                    << std::setw(12) << "MSSV"
+                    << std::setw(17) << "Ho Ten"
+            << std::right << std::setw(8)  << "SoVang"
+                          << std::setw(9)  << "VangKP"
+                          << std::setw(9)  << "TiLeKP%"
+                          << std::setw(10) << "TiLeTong%"
+                          << "  CamThi?" << "\n";
+  printDynamicSeparator(90);
 
   for (int i = 0; i < in; ++i) {
-    std::cout << "  " << std::left << std::setw(4) << (i + 1)
-              << std::setw(12) << dsThongKe[i].mssv 
-              << std::setw(17) << dsThongKe[i].hoTen
-              << std::right << std::setw(8) << dsThongKe[i].soVang 
-              << std::fixed << std::setprecision(1) << std::setw(7) << dsThongKe[i].tiLe << "%" 
-              << std::setw(12) << (dsThongKe[i].nguyCoCamThi ? "[CANH BAO]" : "OK") << "\n";
+    String lyDoStr = (dsThongKe[i].lyDo == 3) ? String("[KP>=20%+Tong>=30%]")
+                   : (dsThongKe[i].lyDo == 1) ? String("[Vang KP>=20%]")
+                   : (dsThongKe[i].lyDo == 2) ? String("[Tong vang>=30%]")
+                                              : String("OK");
+    std::cout << "  " << std::left  << std::setw(4)  << (i + 1)
+                      << std::setw(12) << dsThongKe[i].mssv
+                      << std::setw(17) << dsThongKe[i].hoTen
+              << std::right << std::setw(8)  << dsThongKe[i].soVang
+                            << std::setw(9)  << dsThongKe[i].soVangKhongPhep
+              << std::fixed << std::setprecision(1)
+                            << std::setw(8)  << dsThongKe[i].tiLeVangKP   << "%"
+                            << std::setw(9)  << dsThongKe[i].tiLeVangTong << "%"
+              << "  " << lyDoStr << "\n";
   }
-  printDynamicSeparator(61);
+  printDynamicSeparator(90);
 }
 
 void xemTiLeVangToanLop(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
@@ -123,24 +134,32 @@ void xemTiLeVangToanLop(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
   xayDungThongKe(dsSV, dsDD, dsLop, maLop, dsThongKe);
 
   std::cout << "\n  === TI LE VANG TOAN LOP — Lop " << maLop << " ===\n\n";
-  printDynamicSeparator(69);
-  std::cout << "  " << std::left << std::setw(12) << "MSSV"
-            << std::setw(17) << "Ho Ten"
-            << std::right << std::setw(8) << "SoVang"
-            << std::setw(12) << "VangK.phep"
-            << std::setw(8) << "TiLe%"
-            << std::setw(12) << "CamThi?" << "\n";
-  printDynamicSeparator(69);
+  // separator(89) + prefix 2 = 91 ky tu/dong
+  printDynamicSeparator(89);
+  std::cout << "  " << std::left  << std::setw(12) << "MSSV"
+                    << std::setw(17) << "Ho Ten"
+            << std::right << std::setw(8)  << "SoVang"
+                          << std::setw(12) << "VangKP"
+                          << std::setw(9)  << "TiLeKP%"
+                          << std::setw(11) << "TiLeTong%"
+                          << "  CamThi?" << "\n";
+  printDynamicSeparator(89);
 
   for (int i = 0; i < (int)dsThongKe.size(); ++i) {
-    std::cout << "  " << std::left << std::setw(12) << dsThongKe[i].mssv
-              << std::setw(17) << dsThongKe[i].hoTen
-              << std::right << std::setw(8) << dsThongKe[i].soVang
-              << std::setw(12) << dsThongKe[i].soVangKhongPhep
-              << std::fixed << std::setprecision(1) << std::setw(7) << dsThongKe[i].tiLe << "%"
-              << std::setw(12) << (dsThongKe[i].nguyCoCamThi ? "[CANH BAO]" : "OK") << "\n";
+    String lyDoStr = (dsThongKe[i].lyDo == 3) ? String("[KP>=20%+Tong>=30%]")
+                   : (dsThongKe[i].lyDo == 1) ? String("[Vang KP>=20%]")
+                   : (dsThongKe[i].lyDo == 2) ? String("[Tong vang>=30%]")
+                                              : String("OK");
+    std::cout << "  " << std::left  << std::setw(12) << dsThongKe[i].mssv
+                      << std::setw(17) << dsThongKe[i].hoTen
+              << std::right << std::setw(8)  << dsThongKe[i].soVang
+                            << std::setw(12) << dsThongKe[i].soVangKhongPhep
+              << std::fixed << std::setprecision(1)
+                            << std::setw(8)  << dsThongKe[i].tiLeVangKP  << "%"
+                            << std::setw(10) << dsThongKe[i].tiLeVangTong << "%"
+              << "  " << lyDoStr << "\n";
   }
-  printDynamicSeparator(69);
+  printDynamicSeparator(89);
 }
 
 // --- Xuat bao cao ra file ---
@@ -201,23 +220,32 @@ void xuatBaoCaoFile(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
   }
 
   out << "\n--- TI LE VANG TUNG SINH VIEN ---\n";
-  out << std::left << std::setw(12) << "MSSV"
+  out << std::left  << std::setw(12) << "MSSV"
       << std::setw(17) << "Ho Ten"
-      << std::right << std::setw(8) << "SoVang"
-      << std::setw(8) << "TiLe%"
-      << std::setw(12) << "CamThi?" << "\n";
-  out << "---------------------------------------------------------\n";
+      << std::right << std::setw(8)  << "SoVang"
+                    << std::setw(8)  << "VangKP"
+                    << std::setw(9)  << "TiLeKP%"
+                    << std::setw(11) << "TiLeTong%"
+                    << "  CamThi?" << "\n";
+  out << "--------------------------------------------------------------------------\n";
 
   Vector<ThongKeSinhVien> dsThongKe;
   xayDungThongKe(dsSV, dsDD, dsLop, maLop, dsThongKe);
   Sort::sort(dsThongKe, SoVangDesc{});
 
   for (int i = 0; i < (int)dsThongKe.size(); ++i) {
-    out << std::left << std::setw(12) << dsThongKe[i].mssv
+    String lyDoStr = (dsThongKe[i].lyDo == 3) ? String("[KP>=20%+Tong>=30%]")
+                   : (dsThongKe[i].lyDo == 1) ? String("[Vang KP>=20%]")
+                   : (dsThongKe[i].lyDo == 2) ? String("[Tong vang>=30%]")
+                                              : String("OK");
+    out << std::left  << std::setw(12) << dsThongKe[i].mssv
         << std::setw(17) << dsThongKe[i].hoTen
-        << std::right << std::setw(8) << dsThongKe[i].soVang
-        << std::fixed << std::setprecision(1) << std::setw(7) << dsThongKe[i].tiLe << "%"
-        << std::setw(12) << (dsThongKe[i].nguyCoCamThi ? "[CANH BAO]" : "OK") << "\n";
+        << std::right << std::setw(8)  << dsThongKe[i].soVang
+                      << std::setw(8)  << dsThongKe[i].soVangKhongPhep
+        << std::fixed << std::setprecision(1)
+                      << std::setw(8)  << dsThongKe[i].tiLeVangKP   << "%"
+                      << std::setw(10) << dsThongKe[i].tiLeVangTong << "%"
+        << "  " << lyDoStr << "\n";
   }
 
   out.close();

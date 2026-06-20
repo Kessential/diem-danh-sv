@@ -43,8 +43,10 @@ struct ThongKeSinhVien {
   String hoTen;
   int soVang;
   int soVangKhongPhep;
-  float tiLe;
+  float tiLeVangKP;    // ti le vang K.phep / tong buoi (%)
+  float tiLeVangTong;  // ti le tong vang   / tong buoi (%)
   bool nguyCoCamThi;
+  int lyDo;            // 0=khong, 1=KP>=20%, 2=Tong>=30%, 3=Ca mot va hai
 };
 
 struct ThongKeBuoi {
