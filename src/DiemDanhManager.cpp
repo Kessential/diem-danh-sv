@@ -64,6 +64,13 @@ void ghiDiemDanhMoiLop(Vector<SinhVien>& dsSV,
   if (Search::daDiemDanhBuoi(dsDD, ngay, maLop)) {
     std::cout << "  [!] Buoi " << ngay << " da duoc diem danh.\n";
     if (!Validation::nhapXacNhan("  Ban co muon diem danh lai?")) return;
+
+    // Xóa các phiếu điểm danh cũ của buổi học này để tiến hành ghi đè
+    for (int i = (int)dsDD.size() - 1; i >= 0; --i) {
+      if (dsDD[i].ngay == ngay && dsDD[i].maLop.equalsIgnoreCase(maLop)) {
+        dsDD.remove(i);
+      }
+    }
   }
 
   std::cout << "\n  === GHI NHAN DIEM DANH — Lop " << maLop
@@ -102,15 +109,16 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
   std::cout << "    (B) Tong vang       >= 30% tong so buoi\n\n";
 
   // separator(93) + prefix 2 = 95 ky tu/dong
-  printDynamicSeparator(93);
-  std::cout << "  " << std::left  << std::setw(12) << "MSSV"
+  printDynamicSeparator(97);
+  std::cout << "  " << std::left  << std::setw(4)  << "STT"
+                    << std::setw(12) << "MSSV"
                     << std::setw(22) << "Ho Ten"
             << std::right << std::setw(9)  << "TongVang"
                           << std::setw(8)  << "VangKP"
                           << std::setw(9)  << "TiLeKP%"
                           << std::setw(10) << "TiLeTong%"
                           << "  Ly do\n";
-  printDynamicSeparator(93);
+  printDynamicSeparator(97);
 
   bool found = false;
   int demCanhBao = 0;
@@ -123,7 +131,8 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
         String lyDoStr = (tk.lyDo == 3) ? String("[KP>=20% & Tong>=30%]")
                        : (tk.lyDo == 1) ? String("[Vang KP>=20%]")
                                         : String("[Tong vang>=30%]");
-        std::cout << "  " << std::left  << std::setw(12) << tk.mssv
+        std::cout << "  " << std::left  << std::setw(4)  << demCanhBao
+                          << std::setw(12) << tk.mssv
                           << std::setw(22) << tk.hoTen
                   << std::right << std::setw(9)  << tk.soVang
                                 << std::setw(8)  << tk.soVangKhongPhep
@@ -134,7 +143,7 @@ void kiemTraCanhBaoCamThi(Vector<SinhVien>& dsSV,
       }
     }
   }
-  printDynamicSeparator(93);
+  printDynamicSeparator(97);
   if (!found) {
     std::cout << "  [I] Khong co sinh vien nao bi canh bao cam thi.\n";
   } else {

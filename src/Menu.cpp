@@ -53,12 +53,13 @@ void printDynamicSeparator(int width) {
 
 // --- Quan ly Lop hoc ---
 void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
-  printDynamicSeparator(84);
+  printDynamicSeparator(88);
   if (dsLop.size() == 0) {
     std::cout << "  [I] Chua co lop hoc nao.\n";
     return;
   }
-  std::cout << "  " << std::left << std::setw(10) << "Ma Lop"
+  std::cout << "  " << std::left << std::setw(4)  << "STT"
+            << std::setw(10) << "Ma Lop"
             << std::setw(25) << "Ten HP"
             << std::setw(17) << "Giang Vien"
             << std::right << std::setw(4) << "Thu"
@@ -66,10 +67,11 @@ void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
             << std::setw(6) << "STiet"
             << std::left << " " << std::setw(8) << "Phong"
             << std::right << std::setw(6) << "SBuoi" << "\n";
-  printDynamicSeparator(84);
+  printDynamicSeparator(88);
   for (int i = 0; i < (int)dsLop.size(); ++i) {
     const LopHoc &lh = dsLop[i];
-    std::cout << "  " << std::left << std::setw(10) << lh.maLop
+    std::cout << "  " << std::left << std::setw(4)  << (i + 1)
+              << std::setw(10) << lh.maLop
               << std::setw(25) << lh.tenLop
               << std::setw(17) << lh.giangVien
               << std::right << std::setw(4) << lh.tkb.thu
@@ -78,7 +80,7 @@ void hienThiDanhSachLop(const Vector<LopHoc> &dsLop) {
               << std::left << " " << std::setw(8) << lh.tkb.phong
               << std::right << std::setw(6) << lh.tongSoBuoi << "\n";
   }
-  printDynamicSeparator(84);
+  printDynamicSeparator(88);
 }
 
 void themLopHoc(Vector<LopHoc> &dsLop, const char* pathLop) {
@@ -213,14 +215,16 @@ void menuQuanLyLopHoc(Vector<LopHoc> &dsLop,
 // --- Quan ly Sinh vien ---
 void hienThiSVTheoLop(const Vector<SinhVien> &dsSV, const String &maLop) {
   std::cout << "\n  Danh sach sinh vien lop " << maLop << ":\n";
-  printDynamicSeparator(37);
-  std::cout << "  " << std::left << std::setw(12) << "MSSV"
+  printDynamicSeparator(41);
+  std::cout << "  " << std::left << std::setw(4)  << "STT"
+            << std::setw(12) << "MSSV"
             << std::setw(25) << "Ho Ten" << "\n";
-  printDynamicSeparator(37);
+  printDynamicSeparator(41);
   int count = 0;
   for (int i = 0; i < (int)dsSV.size(); ++i) {
     if (dsSV[i].maLop == maLop) {
-      std::cout << "  " << std::left << std::setw(12) << dsSV[i].mssv
+      std::cout << "  " << std::left << std::setw(4)  << (count + 1)
+                << std::setw(12) << dsSV[i].mssv
                 << std::setw(25) << dsSV[i].hoTen << "\n";
       ++count;
     }
@@ -228,7 +232,7 @@ void hienThiSVTheoLop(const Vector<SinhVien> &dsSV, const String &maLop) {
   if (count == 0)
     std::cout << "  [I] Khong co sinh vien nao.\n";
   else {
-    printDynamicSeparator(37);
+    printDynamicSeparator(41);
     std::cout << "\n  [I] Tong cong: " << count << " sinh vien.\n";
   }
 }
@@ -405,11 +409,12 @@ void menuDiemDanh(Vector<LopHoc> &dsLop,
         std::cout << "  [I] Khong co du lieu diem danh ngay " << ngay << " lop " << maLop << ".\n";
         break;
       }
-      printDynamicSeparator(57);
-      std::cout << "  " << std::left << std::setw(12) << "MSSV"
+      printDynamicSeparator(61);
+      std::cout << "  " << std::left << std::setw(4)  << "STT"
+                << std::setw(12) << "MSSV"
                 << std::setw(30) << "Ho Ten"
                 << "Trang thai\n";
-      printDynamicSeparator(57);
+      printDynamicSeparator(61);
       for (int i = 0; i < (int)result.size(); ++i) {
         int idx = Search::timSinhVienTheoMSSV(dsSV, result[i].mssv);
         // Kiem tra ton tai SV. Toan tu tam phan tren String de dong nhat
@@ -417,11 +422,12 @@ void menuDiemDanh(Vector<LopHoc> &dsLop,
         String ttStr = result[i].trangThai == TrangThaiDD::CO_MAT   ? String("Co mat")
                      : result[i].trangThai == TrangThaiDD::VANG_PHEP ? String("Vang co phep")
                                                                   : String("Vang khong phep");
-        std::cout << "  " << std::left << std::setw(12) << result[i].mssv
+        std::cout << "  " << std::left << std::setw(4)  << (i + 1)
+                  << std::setw(12) << result[i].mssv
                   << std::setw(30) << ten
                   << ttStr << "\n";
       }
-      printDynamicSeparator(57);
+      printDynamicSeparator(61);
       if (Validation::nhapXacNhan("\n  Ban co muon sua diem danh?")) {
         String mssv;
         Validation::nhapChuoi("  MSSV can sua", mssv);
@@ -469,9 +475,10 @@ void menuTimKiem(Vector<LopHoc> &dsLop,
     printHeader("4. TIM KIEM");
     std::cout << "    1. Tim diem danh theo ngay cua lop\n";
     std::cout << "    2. Tim lich su diem danh theo MSSV\n";
+    std::cout << "    3. Xem cac ngay diem danh cua lop\n";
     std::cout << "    0. Quay lai menu chinh\n";
     printSeparator();
-    choice = Validation::nhapSoNguyen("  Chon", 0, 2);
+    choice = Validation::nhapSoNguyen("  Chon", 0, 3);
     switch (choice) {
     case 1: {
       String maLop, ngay;
@@ -492,22 +499,26 @@ void menuTimKiem(Vector<LopHoc> &dsLop,
         std::cout << "  [!] Khong co du lieu diem danh ngay " << ngay << " lop " << maLop << ".\n";
         break;
       }
-      printDynamicSeparator(57);
-      std::cout << "\n  [I] Ket qua — " << (int)result.size() << " phieu:\n";
-      std::cout << "  " << std::left << std::setw(12) << "MSSV"
+      printDynamicSeparator(61);
+      std::cout << "  [I] Ket qua — " << (int)result.size() << " phieu:\n";
+      printDynamicSeparator(61);
+      std::cout << "  " << std::left << std::setw(4)  << "STT"
+                << std::setw(12) << "MSSV"
                 << std::setw(30) << "Ho Ten"
                 << "Trang thai\n";
-      printDynamicSeparator(57);
+      printDynamicSeparator(61);
       for (int i = 0; i < (int)result.size(); ++i) {
         int idx = Search::timSinhVienTheoMSSV(dsSV, result[i].mssv);
         String ten = (idx >= 0) ? dsSV[idx].hoTen : String("?");
         String ttStr = result[i].trangThai == TrangThaiDD::CO_MAT   ? String("Co mat")
                      : result[i].trangThai == TrangThaiDD::VANG_PHEP ? String("Vang co phep")
                                                                   : String("Vang khong phep");
-        std::cout << "  " << std::left << std::setw(12) << result[i].mssv
+        std::cout << "  " << std::left << std::setw(4)  << (i + 1)
+                  << std::setw(12) << result[i].mssv
                   << std::setw(30) << ten
                   << ttStr << "\n";
       }
+      printDynamicSeparator(61);
       break;
     }
     case 2: {
@@ -522,22 +533,59 @@ void menuTimKiem(Vector<LopHoc> &dsLop,
       int idx = Search::timSinhVienTheoMSSV(dsSV, mssv);
       if (idx >= 0)
         std::cout << "\n  Lich su diem danh cua: " << dsSV[idx].hoTen << " (" << mssv << ")\n";
-      printDynamicSeparator(44);
-      std::cout << "  " << std::left << std::setw(12) << "Ngay"
+      printDynamicSeparator(48);
+      std::cout << "  " << std::left << std::setw(4)  << "STT"
+                << std::setw(12) << "Ngay"
                 << std::setw(12) << "Lop"
                 << std::setw(20) << "Trang thai" << "\n";
-      printDynamicSeparator(44);
+      printDynamicSeparator(48);
       for (int i = 0; i < (int)result.size(); ++i) {
         String ttStr = result[i].trangThai == TrangThaiDD::CO_MAT   ? String("Co mat")
                      : result[i].trangThai == TrangThaiDD::VANG_PHEP ? String("Vang co phep")
                                                                   : String("Vang khong phep");
-        std::cout << "  " << std::left << std::setw(12) << result[i].ngay
+        std::cout << "  " << std::left << std::setw(4)  << (i + 1)
+                  << std::setw(12) << result[i].ngay
                   << std::setw(12) << result[i].maLop
                   << std::setw(20) << ttStr << "\n";
       }
-      printDynamicSeparator(44);
+      printDynamicSeparator(48);
       if (result.size() == 0)
         std::cout << "  [I] Khong co du lieu.\n";
+      break;
+    }
+    case 3: {
+      String maLop;
+      Validation::nhapChuoi("  Ma lop", maLop);
+      if (Search::timLopHocTheoMa(dsLop, maLop) == -1) {
+        std::cout << "  [!] Ma lop '" << maLop << "' khong ton tai!\n";
+        break;
+      }
+      // Lay toan bo phieu cua lop, sau do loc ngay unique
+      Vector<PhieuDiemDanh> allDD;
+      Search::timDiemDanhTheoLop(dsDD, maLop, allDD);
+      if (allDD.size() == 0) {
+        std::cout << "  [I] Lop '" << maLop << "' chua co phieu diem danh nao.\n";
+        break;
+      }
+      Vector<String> ngayDD;
+      for (int i = 0; i < (int)allDD.size(); ++i) {
+        bool trung = false;
+        for (int j = 0; j < (int)ngayDD.size(); ++j) {
+          if (ngayDD[j] == allDD[i].ngay) { trung = true; break; }
+        }
+        if (!trung) ngayDD.push_back(allDD[i].ngay);
+      }
+      std::cout << "\n  Cac ngay da diem danh cua Lop " << maLop
+                << " (" << (int)ngayDD.size() << " buoi):\n";
+      printDynamicSeparator(20);
+      std::cout << "  " << std::left << std::setw(4) << "STT"
+                << std::setw(16) << "Ngay" << "\n";
+      printDynamicSeparator(20);
+      for (int i = 0; i < (int)ngayDD.size(); ++i) {
+        std::cout << "  " << std::left << std::setw(4) << (i + 1)
+                  << std::setw(16) << ngayDD[i] << "\n";
+      }
+      printDynamicSeparator(20);
       break;
     }
     }

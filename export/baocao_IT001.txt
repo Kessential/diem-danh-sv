@@ -1,0 +1,20 @@
+BAO CAO DIEM DANH — LOP IT001
+=========================================
+
+Mon hoc   : Lap Trinh Co Ban
+Giang vien: Tran Van A
+Phong     : A1-201  |  Thu 3  |  Tiet 1 - 4
+Tong so buoi: 15
+
+--- THONG KE SI SO THEO BUOI ---
+Ngay           Co mat  Vang phep Vang K.phep   Tong vang
+--------------------------------------------------------
+29/02/2024          1          1           1           2
+18/06/2026          2          1           0           1
+
+--- TI LE VANG TUNG SINH VIEN ---
+MSSV        Ho Ten             SoVang   TiLe%     CamThi?
+---------------------------------------------------------
+23520002    Le Binh Bao             2    0.0%          OK
+23520003    Tran Cao Cuong          1    6.7%          OK
+23520001    Nguyen Hoang Anh        0    0.0%          OK

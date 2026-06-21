@@ -36,6 +36,11 @@ void timDiemDanhTheoMSSVvaLop(const Vector<PhieuDiemDanh>& dsDD,
                               const String& maLop,
                               Vector<PhieuDiemDanh>& result);
 
+// Tim toan bo phieu diem danh theo ma lop
+void timDiemDanhTheoLop(const Vector<PhieuDiemDanh>& dsDD,
+                        const String& maLop,
+                        Vector<PhieuDiemDanh>& result);
+
 // --- Kiem tra ton tai ---
 
 // Kiem tra lop da diem danh trong ngay chua

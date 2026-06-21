@@ -51,13 +51,14 @@ void thongKeSiSoTheoBuoi(Vector<PhieuDiemDanh>& dsDD, const String& maLop) {
   Vector<String> ngayDD = layDanhSachNgayDiemDanh(dsDD, maLop);
 
   std::cout << "\n  === THONG KE SI SO THEO BUOI — Lop " << maLop << " ===\n\n";
-  printDynamicSeparator(54);
-  std::cout << "  " << std::left << std::setw(12) << "Ngay"
+  printDynamicSeparator(58);
+  std::cout << "  " << std::left << std::setw(4)  << "STT"
+            << std::setw(12) << "Ngay"
             << std::right << std::setw(9) << "Co mat"
             << std::setw(11) << "Vang phep"
             << std::setw(12) << "Vang K.phep"
             << std::setw(10) << "Tong vang" << "\n";
-  printDynamicSeparator(54);
+  printDynamicSeparator(58);
 
   for (int i = 0; i < (int)ngayDD.size(); ++i) {
     int coMat = 0, vangP = 0, vangK = 0;
@@ -70,14 +71,14 @@ void thongKeSiSoTheoBuoi(Vector<PhieuDiemDanh>& dsDD, const String& maLop) {
       else if (dsDD[j].trangThai == TrangThaiDD::VANG_KHONG_PHEP)
         ++vangK;
     }
-    std::cout << "  " << std::left << std::setw(12) 
-              << ngayDD[i] << std::right
+    std::cout << "  " << std::left << std::setw(4)  << (i + 1)
+              << std::setw(12) << ngayDD[i] << std::right
               << std::setw(9) << coMat
               << std::setw(11) << vangP
               << std::setw(12) << vangK
               << std::setw(10) << (vangP + vangK) << "\n";
   }
-  printDynamicSeparator(54);
+  printDynamicSeparator(58);
   if (ngayDD.size() == 0) {
     std::cout << "  [I] Chua co du lieu diem danh nao.\n";
   }
@@ -134,23 +135,24 @@ void xemTiLeVangToanLop(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
   xayDungThongKe(dsSV, dsDD, dsLop, maLop, dsThongKe);
 
   std::cout << "\n  === TI LE VANG TOAN LOP — Lop " << maLop << " ===\n\n";
-  // separator(89) + prefix 2 = 91 ky tu/dong
-  printDynamicSeparator(89);
-  std::cout << "  " << std::left  << std::setw(12) << "MSSV"
+  printDynamicSeparator(93);
+  std::cout << "  " << std::left  << std::setw(4)  << "STT"
+                    << std::setw(12) << "MSSV"
                     << std::setw(17) << "Ho Ten"
             << std::right << std::setw(8)  << "SoVang"
                           << std::setw(12) << "VangKP"
                           << std::setw(9)  << "TiLeKP%"
                           << std::setw(11) << "TiLeTong%"
                           << "  CamThi?" << "\n";
-  printDynamicSeparator(89);
+  printDynamicSeparator(93);
 
   for (int i = 0; i < (int)dsThongKe.size(); ++i) {
     String lyDoStr = (dsThongKe[i].lyDo == 3) ? String("[KP>=20%+Tong>=30%]")
                    : (dsThongKe[i].lyDo == 1) ? String("[Vang KP>=20%]")
                    : (dsThongKe[i].lyDo == 2) ? String("[Tong vang>=30%]")
                                               : String("OK");
-    std::cout << "  " << std::left  << std::setw(12) << dsThongKe[i].mssv
+    std::cout << "  " << std::left  << std::setw(4)  << (i + 1)
+                      << std::setw(12) << dsThongKe[i].mssv
                       << std::setw(17) << dsThongKe[i].hoTen
               << std::right << std::setw(8)  << dsThongKe[i].soVang
                             << std::setw(12) << dsThongKe[i].soVangKhongPhep
@@ -159,7 +161,7 @@ void xemTiLeVangToanLop(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
                             << std::setw(10) << dsThongKe[i].tiLeVangTong << "%"
               << "  " << lyDoStr << "\n";
   }
-  printDynamicSeparator(89);
+  printDynamicSeparator(93);
 }
 
 // --- Xuat bao cao ra file ---
@@ -193,12 +195,13 @@ void xuatBaoCaoFile(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
 
   out << "--- THONG KE SI SO THEO BUOI ---\n";
   // Day truc tiep vao out de tranh tran bo nho buffer
-  out << std::left << std::setw(12) << "Ngay"
+  out << std::left << std::setw(4)  << "STT"
+      << std::setw(12) << "Ngay"
       << std::right << std::setw(9) << "Co mat"
       << std::setw(11) << "Vang phep"
       << std::setw(12) << "Vang K.phep"
       << std::setw(12) << "Tong vang" << "\n";
-  out << "--------------------------------------------------------\n";
+  out << "------------------------------------------------------------\n";
 
   Vector<String> ngayDD = layDanhSachNgayDiemDanh(dsDD, maLop);
   for (int i = 0; i < (int)ngayDD.size(); ++i) {
@@ -212,7 +215,8 @@ void xuatBaoCaoFile(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
       else if (dsDD[j].trangThai == TrangThaiDD::VANG_KHONG_PHEP)
         ++vangK;
     }
-    out << std::left << std::setw(12) << ngayDD[i]
+    out << std::left << std::setw(4)  << (i + 1)
+        << std::setw(12) << ngayDD[i]
         << std::right << std::setw(9) << coMat
         << std::setw(11) << vangP
         << std::setw(12) << vangK
@@ -220,14 +224,15 @@ void xuatBaoCaoFile(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
   }
 
   out << "\n--- TI LE VANG TUNG SINH VIEN ---\n";
-  out << std::left  << std::setw(12) << "MSSV"
+  out << std::left  << std::setw(4)  << "STT"
+      << std::setw(12) << "MSSV"
       << std::setw(17) << "Ho Ten"
       << std::right << std::setw(8)  << "SoVang"
                     << std::setw(8)  << "VangKP"
                     << std::setw(9)  << "TiLeKP%"
                     << std::setw(11) << "TiLeTong%"
                     << "  CamThi?" << "\n";
-  out << "--------------------------------------------------------------------------\n";
+  out << "------------------------------------------------------------------------------\n";
 
   Vector<ThongKeSinhVien> dsThongKe;
   xayDungThongKe(dsSV, dsDD, dsLop, maLop, dsThongKe);
@@ -238,7 +243,8 @@ void xuatBaoCaoFile(Vector<SinhVien>& dsSV, Vector<PhieuDiemDanh>& dsDD,
                    : (dsThongKe[i].lyDo == 1) ? String("[Vang KP>=20%]")
                    : (dsThongKe[i].lyDo == 2) ? String("[Tong vang>=30%]")
                                               : String("OK");
-    out << std::left  << std::setw(12) << dsThongKe[i].mssv
+    out << std::left  << std::setw(4)  << (i + 1)
+        << std::setw(12) << dsThongKe[i].mssv
         << std::setw(17) << dsThongKe[i].hoTen
         << std::right << std::setw(8)  << dsThongKe[i].soVang
                       << std::setw(8)  << dsThongKe[i].soVangKhongPhep

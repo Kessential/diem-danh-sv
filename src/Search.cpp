@@ -74,4 +74,15 @@ bool daDiemDanhBuoi(const Vector<PhieuDiemDanh>& dsDD,
   return false;
 }
 
+// Loc toan bo phieu diem danh theo maLop, day vao result
+void timDiemDanhTheoLop(const Vector<PhieuDiemDanh>& dsDD,
+                        const String& maLop,
+                        Vector<PhieuDiemDanh>& result) {
+  result.clear();
+  for (size_t i = 0; i < dsDD.size(); ++i) {
+    if (dsDD[i].maLop.equalsIgnoreCase(maLop))
+      result.push_back(dsDD[i]);
+  }
+}
+
 }  // namespace Search
