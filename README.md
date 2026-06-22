@@ -58,12 +58,13 @@
 ### 4. Tìm kiếm
 - Tìm điểm danh theo **ngày + lớp**
 - Tìm lịch sử điểm danh theo **MSSV**
+- Xem **các ngày đã điểm danh** của một lớp
 - Tìm kiếm **không phân biệt hoa/thường** (case-insensitive)
 
 ### 5. Sắp xếp
-- Sắp xếp **lớp học** theo mã lớp (tăng/giảm)
-- Sắp xếp **sinh viên** theo MSSV hoặc theo Mã lớp → Tên → Họ đệm → MSSV
-- Sắp xếp **điểm danh** theo Mã lớp → Ngày → MSSV
+- Sắp xếp **lớp học** theo mã lớp (tăng/giảm dần)
+- Sắp xếp **sinh viên** theo MSSV hoặc theo Mã lớp → Tên → Họ đệm → MSSV (tăng/giảm dần)
+- Sắp xếp **điểm danh** theo Mã lớp → Ngày → MSSV (tăng/giảm dần)
 - Thuật toán: **Hoare QuickSort** + Median-of-Three + Insertion Sort cutoff (n < 16)
 
 ### 6. Báo cáo & Thống kê
