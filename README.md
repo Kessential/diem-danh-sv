@@ -310,18 +310,6 @@ cd ..
 ./build/Tests
 ```
 
-### Kịch bản kiểm thử thủ công
-
-Xem tài liệu chi tiết tại [`kiem_thu_chi_tiet.md`](kiem_thu_chi_tiet.md) bao gồm 13 test cases cho:
-- Thêm/sửa/xóa lớp học (TC_01 ~ TC_03)
-- Thêm/xóa sinh viên, ràng buộc khóa ngoại (TC_04 ~ TC_06)
-- Điểm danh, kiểm tra trùng lặp, sửa phiếu (TC_07 ~ TC_09)
-- Tìm kiếm case-insensitive, cảnh báo cấm thi (TC_10 ~ TC_11)
-- Xuất báo cáo file (TC_12)
-- Kiểm thử tải 5,000+ bản ghi (TC_13)
-
----
-
 ## Dữ liệu mẫu
 
 Project đi kèm bộ dữ liệu mẫu quy mô lớn, được sinh tự động bởi script Python [`test/gen_data.py`](test/gen_data.py):
@@ -349,7 +337,6 @@ diem-danh-sv/
 ├── CMakeLists.txt            # Cấu hình build CMake
 ├── README.md                 # Tài liệu này
 ├── .clang-format             # Cấu hình format code (Google style)
-├── kiem_thu_chi_tiet.md      # Kịch bản kiểm thử thủ công
 │
 ├── src/                      # Mã nguồn chính
 │   ├── main.cpp              # Entry point, khởi tạo & menu loop
